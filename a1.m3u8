@@ -1,4 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://trara.ben44mcc.workers.dev/ITV_1/tracks-v1a1/mono.m3u8
+https://ns.ben44mcc.workers.dev/live/stream-991140_lsd.m3u8?auth_key=1723321902-0-0-0f34774d153c75fca93367d3e5c61445
