@@ -1,4 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://manifest-gcp-us-east4-vop1.fastly.mux.com/zPu5YrE6zfLL00V02TWmxHN00SA2dJaU2fZeOqAoG3SFhZI8uwXpcomXb94aXHvCCz43jR7jLxM1NjmUOa1LFo6JLZ02Lp2syGiz6b6kDLOD01VY/rendition.m3u8?cdn=fastly&exclude_pdt=false&expires=1723459860&live=1&skid=default&signature=NjZiOWU5MTRfYzRkMTBlMjkzZjZjYjRjMGU0ZGM0YzcyOGY3ZDJhMTQ2NWNjZDMxZDFmMTkzNDA5NGU4MWQ1ZTBmZjYwNDJiYg==&vsid=WS9C71tv500vYtFENWv9Fub2Zav6jJFRCQnWwQKw3cyXaEqNFx00iyssnjd3Xk63pbXsimgWNr6G4
+https://ns.ben44mcc.workers.dev/live/stream-9912008_lsd.m3u8?auth_key=1723488801-0-0-367927fa4dbefc34850076fe4de1bdb2
