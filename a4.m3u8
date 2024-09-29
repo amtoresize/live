@@ -1,5 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://agnia.ben44mcc.workers.dev/live/ballbar_21300,m3u8
-#https://ns3.ben44mcc.workers.dev/livecdn/channel10.m3u8?auth_key=3000001727598552-0-0-24bf633d986a71525a82586874cf4c47
+https://ns3.ben44mcc.workers.dev/livecdn/channel84.m3u8?auth_key=3000001727611811-0-0-16b495a1fe983f171ff2b2a91b8ffe09
