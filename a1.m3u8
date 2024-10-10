@@ -1,5 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://pancod.ben44mcc.workers.dev/ps_fc_ww/hls/index.m3u8?psplaylink=e4052e64960a483e94fa3532d9d1bb8a32122196d082156f34c2df53db559ff0ff864da97ceec0d41092ef846cbf44b58b4d70b84e71e7078eb54a9e7c8885d6daa0fc3ec600a43ed5d632903f4effa9&psplaylink_special_token=
-#https://agnia.ben44mcc.workers.dev/live/ballbar_23930.m3u8
+https://ns.ben44mcc.workers.dev/live/stream-9912052_lsd.m3u8?auth_key=1728579206-0-0-6c648e43d8f5b5ff997883a47f54944b
