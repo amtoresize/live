@@ -1,4 +1,9 @@
-#EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://ns.ben44mcc.workers.dev/live/stream-486629_lsd.m3u8?auth_key=1728580106-0-0-49a6fc2eff2678e841ce09b6e4b1f735
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-ALLOW-CACHE:YES
+#EXT-X-TARGETDURATION:11
+#EXTINF:10.120000,
+https://that.ben44mcc.workers.dev/mohdtv.com:8880/live/voby3837/28337929/1702_0.ts
+#EXTINF:10.000000,
+https://that.ben44mcc.workers.dev/mohdtv.com:8880/live/voby3837/28337929/1702_1.ts
+#EXTINF:10.000000,
+https://that.ben44mcc.workers.dev/mohdtv.com:8880/live/voby3837/28337929/1702_2.ts
