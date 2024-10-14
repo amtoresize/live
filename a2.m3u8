@@ -1,4 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-http://connect-uk.proxytx.cloud:80/play/live.php?mac=00:1a:79:bf:b3:83&stream=1669027&extension=m3u8&play_token=NFzAnrQtwx
+https://ns.ben44mcc.workers.dev/live/stream-9912093_lsd.m3u8?auth_key=1728888986-0-0-5fe8ba66d2f35ce1b7c65dc708356af1
