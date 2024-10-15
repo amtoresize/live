@@ -1,5 +1,5 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://agnia.ben44mcc.workers.dev/live/ballbar_21140.m3u8
-#https://pancod.ben44mcc.workers.dev/ps_fc_ww/hls/index.m3u8?
+https://pancod.ben44mcc.workers.dev/ps_fc_ww/hls/index.m3u8?psplaylink=e4052e64960a483e94fa3532d9d1bb8a32122196d082156f34c2df53db559ff0180ebb3271a0a5b2af2cb3cec2add045c75fc9bd4ba68ea784fef679a8b57f53cc8b3db1640bb5d0e66df202292ebd52&psplaylink_special_token=
+#https://agnia.ben44mcc.workers.dev/live/ballbar_21140.m3u8
