@@ -1,11 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-TARGETDURATION:5
-#EXT-X-MEDIA-SEQUENCE:1200
-#EXT-X-DISCONTINUITY-SEQUENCE:0
-#EXTINF:4.0,
-https://thap.ben44mcc.workers.dev/qrHbk8jFJBYVCkmOXs2xtg/Fv2lucGIbhPi2caWYvF5Lg/1729083536242/live/may10/media-uz61im5ea_1000.ts
-#EXTINF:4.0,
-https://thap.ben44mcc.workers.dev/qrHbk8jFJBYVCkmOXs2xtg/Fv2lucGIbhPi2caWYvF5Lg/1729083536242/live/may10/media-uz61im5ea_1001.ts
-#EXTINF:4.0,
-https://thap.ben44mcc.workers.dev/qrHbk8jFJBYVCkmOXs2xtg/Fv2lucGIbhPi2caWYvF5Lg/1729083536242/live/may10/media-uz61im5ea_1002.ts
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
+https://agnia.ben44mcc.workers.dev/live/ballbar_19800.m3u8
