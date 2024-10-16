@@ -1,4 +1,11 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://thap.ben44mcc.workers.dev/2YC_op9QP4FA-KZcC5N_mg/Fv2lucGIbhPi2caWYvF5Lg/1729083536242/live/may12/chunklist.m3u8
+#EXT-X-TARGETDURATION:5
+#EXT-X-MEDIA-SEQUENCE:1200
+#EXT-X-DISCONTINUITY-SEQUENCE:0
+#EXTINF:4.0,
+https://thap.ben44mcc.workers.dev/qrHbk8jFJBYVCkmOXs2xtg/Fv2lucGIbhPi2caWYvF5Lg/1729083536242/live/may10/media-uz61im5ea_1.ts
+#EXTINF:4.0,
+https://thap.ben44mcc.workers.dev/qrHbk8jFJBYVCkmOXs2xtg/Fv2lucGIbhPi2caWYvF5Lg/1729083536242/live/may10/media-uz61im5ea_2.ts
+#EXTINF:4.0,
+https://thap.ben44mcc.workers.dev/qrHbk8jFJBYVCkmOXs2xtg/Fv2lucGIbhPi2caWYvF5Lg/1729083536242/live/may10/media-uz61im5ea_3.ts
