@@ -22,7 +22,7 @@
         h1 {
             color: #fff;
             font-size: 1.0rem; /* Tingkatkan ukuran font untuk header */
-            margin: 0; /* Hapus margin untuk mengatur posisi header */
+            margin: 5px; /* Hapus margin untuk mengatur posisi header */
         }
 
         .wrapper {
