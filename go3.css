@@ -94,7 +94,7 @@
             padding: 5px 5px; /* Ukuran padding diperkecil */
             border-radius: 5px;
             text-decoration: none;
-            font-size: 1.0rem; /* Ukuran font tombol diperkecil */
+            font-size: 0.7rem; /* Ukuran font tombol diperkecil */
             font-weight: bold;
             transition: background-color 0.3s ease;
         }
