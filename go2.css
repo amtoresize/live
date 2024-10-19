@@ -21,7 +21,7 @@
 
         h1 {
             color: #fff;
-            font-size: 2.5rem; /* Tingkatkan ukuran font untuk header */
+            font-size: 1.0rem; /* Tingkatkan ukuran font untuk header */
             margin: 0; /* Hapus margin untuk mengatur posisi header */
         }
 
@@ -94,7 +94,7 @@
             padding: 5px 5px; /* Ukuran padding diperkecil */
             border-radius: 5px;
             text-decoration: none;
-            font-size: 0.5rem; /* Ukuran font tombol diperkecil */
+            font-size: 1.0rem; /* Ukuran font tombol diperkecil */
             font-weight: bold;
             transition: background-color 0.3s ease;
         }
