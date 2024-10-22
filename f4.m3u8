@@ -1,6 +1,5 @@
 #EXTM3U
 #EXT-X-VERSION:3
-
 #EXT-X-STREAM-INF:BANDWIDTH=5192000,CODECS="avc1.64002A,mp4a.40.2",RESOLUTION=1920x1080
 https://livecloud.pstatic.net:443/sports/lip2_kr/anmssgpu0004/wa1ogqttlr6549bwki8nblxvoidyv43j1jem/hdntl=exp=1729624865~acl=*%2Fwa1ogqttlr6549bwki8nblxvoidyv43j1jem%2F*~data=hdntl~hmac=dc956c6080630f6481db35b63353931e720c9de35e0664d159a1c633e94c4602/chunklist_1080.stream.m3u8
 #EXT-X-STREAM-INF:BANDWIDTH=2128000,CODECS="avc1.64001F,mp4a.40.2",RESOLUTION=1280x720
