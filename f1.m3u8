@@ -1,5 +1,12 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://pancod.ben44mcc.workers.dev/ps_fc_ww/hls/index.m3u8?psplaylink=e4052e64960a483e94fa3532d9d1bb8a32122196d082156f34c2df53db559ff0180ebb3271a0a5b2af2cb3cec2add045c75fc9bd4ba68ea784fef679a8b57f53cc8b3db1640bb5d0e66df202292ebd52&psplaylink_special_token=
-#https://agnia.ben44mcc.workers.dev/live/ballbar_21140.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=5192000,CODECS="avc1.64002A,mp4a.40.2",RESOLUTION=1920x1080
+https://livecloud.pstatic.net:443/sports/lip2_kr/anmssgpu0004/fwqimezz7qzc1tcuztaftjli91g4v1dlp8pv/hdntl=exp=1729711683~acl=*%2Ffwqimezz7qzc1tcuztaftjli91g4v1dlp8pv%2F*~data=hdntl~hmac=a11d79d52fe639795f83e0ef3200e46800f50e4855dea5cd4f94b254db06d6da/chunklist_1080.stream.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=2128000,CODECS="avc1.64001F,mp4a.40.2",RESOLUTION=1280x720
+https://livecloud.pstatic.net:443/sports/lip2_kr/anmssgpu0004/fwqimezz7qzc1tcuztaftjli91g4v1dlp8pv/hdntl=exp=1729711683~acl=*%2Ffwqimezz7qzc1tcuztaftjli91g4v1dlp8pv%2F*~data=hdntl~hmac=a11d79d52fe639795f83e0ef3200e46800f50e4855dea5cd4f94b254db06d6da/chunklist_720.stream.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=1128000,CODECS="avc1.4D401F,mp4a.40.2",RESOLUTION=854x480
+https://livecloud.pstatic.net:443/sports/lip2_kr/anmssgpu0004/fwqimezz7qzc1tcuztaftjli91g4v1dlp8pv/hdntl=exp=1729711683~acl=*%2Ffwqimezz7qzc1tcuztaftjli91g4v1dlp8pv%2F*~data=hdntl~hmac=a11d79d52fe639795f83e0ef3200e46800f50e4855dea5cd4f94b254db06d6da/chunklist_480.stream.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=928000,CODECS="avc1.4D401E,mp4a.40.2",RESOLUTION=640x360
+https://livecloud.pstatic.net:443/sports/lip2_kr/anmssgpu0004/fwqimezz7qzc1tcuztaftjli91g4v1dlp8pv/hdntl=exp=1729711683~acl=*%2Ffwqimezz7qzc1tcuztaftjli91g4v1dlp8pv%2F*~data=hdntl~hmac=a11d79d52fe639795f83e0ef3200e46800f50e4855dea5cd4f94b254db06d6da/chunklist_360.stream.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=496000,CODECS="avc1.4D4015,mp4a.40.2",RESOLUTION=480x272
+https://livecloud.pstatic.net:443/sports/lip2_kr/anmssgpu0004/fwqimezz7qzc1tcuztaftjli91g4v1dlp8pv/hdntl=exp=1729711683~acl=*%2Ffwqimezz7qzc1tcuztaftjli91g4v1dlp8pv%2F*~data=hdntl~hmac=a11d79d52fe639795f83e0ef3200e46800f50e4855dea5cd4f94b254db06d6da/chunklist_272.stream.m3u8
