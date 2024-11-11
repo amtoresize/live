@@ -1,11 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-MEDIA-SEQUENCE:0
-#EXT-X-ALLOW-CACHE:YES
-#EXT-X-TARGETDURATION:11
-#EXTINF:10.120000,
-https://that.ben44mcc.workers.dev/newlife3.wanicelife.com:8880/live/D12m2806/32723612/1706_0.ts
-#EXTINF:10.000000,
-https://that.ben44mcc.workers.dev/newlife3.wanicelife.com:8880/live/D12m2806/32723612/1706_1.ts
-#EXTINF:10.000000,
-https://that.ben44mcc.workers.dev/newlife3.wanicelife.com:8880/live/D12m2806/32723612/1706_2.ts
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
+https://try.ben44mcc.workers.dev/Perfecttv/Perfecttv/2
