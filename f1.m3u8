@@ -1,10 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3500000,RESOLUTION=1920x1080
-https://output.unregister.xyz/euro/u17inavsaus_uhd/index.m3u8
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=2048000,RESOLUTION=1280x720
-https://output.unregister.xyz/euro/u17inavsaus_hd/index.m3u8
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1638000,RESOLUTION=960x540
-https://output.unregister.xyz/euro/u17inavsaus_sd/index.m3u8
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=512000,RESOLUTION=640x360
-https://output.unregister.xyz/euro/u17inavsaus_ld/index.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
+https://ns.ben44mcc.workers.dev/live/stream-9912060_lsd.m3u8?auth_key=1731578369-0-0-e7313a636ca28769f5295de1e8290271
