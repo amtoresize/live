@@ -1,4 +1,11 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://try.ben44mcc.workers.dev/Perfecttv/Perfecttv/2?=e.m3u8
+#EXT-X-MEDIA-SEQUENCE:0
+#EXT-X-ALLOW-CACHE:YES
+#EXT-X-TARGETDURATION:11
+#EXTINF:10.120000,
+https://cors3.ben44mcc.workers.dev/352_0.ts
+#EXTINF:10.000000,
+https://cors3.ben44mcc.workers.dev/352_1.ts
+#EXTINF:10.000000,
+https://cors3.ben44mcc.workers.dev/352_2.ts
