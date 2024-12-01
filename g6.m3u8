@@ -1,11 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-MEDIA-SEQUENCE:0
-#EXT-X-ALLOW-CACHE:YES
-#EXT-X-TARGETDURATION:11
-#EXTINF:10.120000,
-https://cors3.ben44mcc.workers.dev/28932_0.ts
-#EXTINF:10.000000,
-https://cors3.ben44mcc.workers.dev/28932_1.ts
-#EXTINF:10.000000,
-https://cors3.ben44mcc.workers.dev/28932_2.ts
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
+https://agnia.ben44mcc.workers.dev/live/ballbar_28550.m3u8
