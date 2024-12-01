@@ -1,11 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-MEDIA-SEQUENCE:0
-#EXT-X-ALLOW-CACHE:YES
-#EXT-X-TARGETDURATION:11
-#EXTINF:10.120000,
-http://perfecttv.net:8080/live/Perfecttv/Perfecttv/8_0.ts
-#EXTINF:10.000000,
-http://perfecttv.net:8080/live/Perfecttv/Perfecttv/8_1.ts
-#EXTINF:10.000000,
-http://perfecttv.net:8080/live/Perfecttv/Perfecttv/8_2.ts
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
+https://ns.ben44mcc.workers.dev/live/stream-329740_lsd.m3u8?auth_key=1733035590-0-0-4a54ba0abd817e6fd94da7f0fa99d0b7
