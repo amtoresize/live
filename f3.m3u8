@@ -1,5 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://livecloud.pstatic.net/sports/lip2_kr/anmssgpu0001/2o9uxgmev9vqckhtcvpmbmaye47fr3vx3sp0/hdntl=exp=1732982791~acl=*%2F2o9uxgmev9vqckhtcvpmbmaye47fr3vx3sp0%2F*~data=hdntl~hmac=5edf31cef85a6f67d510472cf6c2f9c36ad1740e38f311c1353e969ea9e3309f/chunklist_360.stream.m3u8
-#https://agnia.ben44mcc.workers.dev/live/ballbar_31550.m3u8
+https://livecloud.pstatic.net/sports/lip2_kr/anmssgpu0003/w6rnsdvbbmgoip4c5ekkmpnz1idde570wa9u/hdntl=exp=1733069409~acl=*%2Fw6rnsdvbbmgoip4c5ekkmpnz1idde570wa9u%2F*~data=hdntl~hmac=5dfea03ff889b2a169600e536be3f71c7f8260d600b1e77a1c9a19fc79a9b7ce/chunklist_360.stream.m3u8#https://agnia.ben44mcc.workers.dev/live/ballbar_31550.m3u8
