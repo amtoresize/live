@@ -4,8 +4,8 @@
 #EXT-X-ALLOW-CACHE:YES
 #EXT-X-TARGETDURATION:11
 #EXTINF:10.120000,
-https://cors3.ben44mcc.workers.dev/60864_0.ts
+http://perfecttv.net:8080/live/Perfecttv/Perfecttv/1_0.ts
 #EXTINF:10.000000,
-https://cors3.ben44mcc.workers.dev/60864_1.ts
+http://perfecttv.net:8080/live/Perfecttv/Perfecttv/1_1.ts
 #EXTINF:10.000000,
-https://cors3.ben44mcc.workers.dev/60864_2.ts
+http://perfecttv.net:8080/live/Perfecttv/Perfecttv/1_2.ts
