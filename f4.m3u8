@@ -1,4 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://livecloud.akamaized.net:443/sports/lip2_kr2/anmssgpu0001/fhrsprunkdgwtbky64gudeorisic09lhdc/hdntl=exp=1733427991~acl=*%2ffhrsprunkdgwtbky64gudeorisic09lhdc%2f*~data=hdntl~hmac=44f92419fd3f0d926c9b718eecf962e7662a0a0929f29722fc0f14a9b85dd1b4/chunklist_480.stream.m3u8
+https://livecloud.pstatic.net/sports/lip2_kr/anmssgpu0003/yzaxnspk7jyzw3w6lyjjxzcwq2wsdu0w0hu4/hdntl=exp=1733511615~acl=*%2Fyzaxnspk7jyzw3w6lyjjxzcwq2wsdu0w0hu4%2F*~data=hdntl~hmac=26c628d6881f12d6ba8c629e57bd7484e9b44e68fd45429a77ac4a7081db5c89/chunklist_480.stream.m3u8
