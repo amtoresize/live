@@ -1,4 +1,11 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://ns.ben44mcc.workers.dev/live/stream-344370_lsd.m3u8?auth_key=1733403031-0-0-1c19378560d86d2ef4f50439d4b6ce62
+## Created with Broadpeak BkS350 Origin Packager  (version=1.14.2-30503)
+
+# variants
+#EXT-X-STREAM-INF:BANDWIDTH=1392000,AVERAGE-BANDWIDTH=1265000,CODECS="mp4a.40.2,avc1.4D001E",RESOLUTION=640x360,FRAME-RATE=25
+https://ec02-pop1-hlc.tv360.vn/bpk-token/w3nwo4rzfbmhfttdcd3lpw3hok3nwz3s/bpk-tv/194/output/194-audio_133600_eng=131600-video=1067600.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=2190000,AVERAGE-BANDWIDTH=1991000,CODECS="mp4a.40.2,avc1.4D001F",RESOLUTION=1280x720,FRAME-RATE=25
+https://ec02-pop1-hlc.tv360.vn/bpk-token/w3nwo4rzfbmhfttdcd3lpw3hok3nwz3s/bpk-tv/194/output/194-audio_133600_eng=131600-video=1752000.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=4369000,AVERAGE-BANDWIDTH=3972000,CODECS="mp4a.40.2,avc1.4D0028",RESOLUTION=1920x1080,FRAME-RATE=25
+https://ec02-pop1-hlc.tv360.vn/bpk-token/w3nwo4rzfbmhfttdcd3lpw3hok3nwz3s/bpk-tv/194/output/194-audio_133600_eng=131600-video=3621600.m3u8
