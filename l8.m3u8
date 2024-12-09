@@ -2,3 +2,4 @@
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
 https://ns2.ben44mcc.workers.dev/live/stream-9912092_lsd.m3u8?txSecret=9b6ca51301650cb90f942157283483e9&txTime=675597ec
+#stream-9912060_lsd.m3u8?txSecret=c64d4a456061c00de50332180bab850a&txTime=67566d32
