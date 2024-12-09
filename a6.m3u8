@@ -1,4 +1,12 @@
 #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://ns.ben44mcc.workers.dev/live/stream-9912015_lsd.m3u8?auth_key=1733690220-0-0-54ae3871f30531b03cfb1170b4ad61eb
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=256000,RESOLUTION=256x144
+https://midcache.rctiplus.id/live/inavsmyanmar_144p/index.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=512000,RESOLUTION=426x240
+https://midcache.rctiplus.id/live/inavsmyanmar_240p/index.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=768000,RESOLUTION=640x360
+https://midcache.rctiplus.id/live/inavsmyanmar_360p/index.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=1500000,RESOLUTION=854x480
+https://midcache.rctiplus.id/live/inavsmyanmar_480p/index.m3u8
+#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=2500000,RESOLUTION=1280x720
+https://midcache.rctiplus.id/live/inavsmyanmar_720p/index.m3u8
