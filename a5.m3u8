@@ -1,4 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://ns2.ben44mcc.workers.dev/live/stream-9912077_lsd.m3u8?txSecret=b2b54900225c7f2f82cf78d1401a1844&txTime=675640f3
+https://ns.ben44mcc.workers.dev/live/stream-414317_lsd.m3u8?auth_key=1733699823-0-0-751cc63d7e89f4789b5c883b7ffbc9e9
