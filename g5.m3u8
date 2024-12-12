@@ -4,8 +4,8 @@
 #EXT-X-ALLOW-CACHE:YES
 #EXT-X-TARGETDURATION:11
 #EXTINF:10.120000,
-https://off6.jismhaitokia.com:999/hls/wsmkmlfeed73-0.ts
+https://off6.jismhaitokia.com:999/hls/wsmkmlfeed73_0.ts
 #EXTINF:10.000000,
-https://off6.jismhaitokia.com:999/hls/wsmkmlfeed73-1.ts
+https://off6.jismhaitokia.com:999/hls/wsmkmlfeed73_1.ts
 #EXTINF:10.000000,
-https://off6.jismhaitokia.com:999/hls/wsmkmlfeed73-2.ts
+https://off6.jismhaitokia.com:999/hls/wsmkmlfeed73_2.ts
