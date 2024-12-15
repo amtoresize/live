@@ -1,5 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://agnia.ben44mcc.workers.dev/live/sd-6MtLeBjxZRQQoAU5ug.m3u8
-#https://ns.ben44mcc.workers.dev/live/stream-499765_lsd.m3u8?auth_key=1734262052-0-0-db53f877ddcb690f95c00b6d56c39d4c
+https://ns.ben44mcc.workers.dev/live/stream-499765_lsd.m3u8?auth_key=1734262052-0-0-db53f877ddcb690f95c00b6d56c39d4c
