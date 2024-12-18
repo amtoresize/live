@@ -1,4 +1,9 @@
 #EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://agnia.ben44mcc.workers.dev/live/ballbar_27520.m3u8
+#EXT-X-ALLOW-CACHE:YES
+#EXT-X-TARGETDURATION:11
+#EXTINF:10.120000,
+http://perfecttv.net:8080/live/Perfecttv/Perfecttv/4_0.ts
+#EXTINF:10.000000,
+http://perfecttv.net:8080/live/Perfecttv/Perfecttv/4_1.ts
+#EXTINF:10.000000,
+http://perfecttv.net:8080/live/Perfecttv/Perfecttv/4_2.ts
