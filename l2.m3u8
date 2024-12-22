@@ -2,5 +2,5 @@
 #EXT-X-VERSION:4
 #EXT-X-INDEPENDENT-SEGMENTS
 #EXT-X-STREAM-INF:BANDWIDTH=4370178,RESOLUTION=1280x720,FRAME-RATE=60,CODECS="mp4a.40.2,avc1.4d4020",AUDIO="audio_0"
-http://ledir.thund.re:80/play/live.php?mac=00:1A:79:22:14:F3&stream=333495&extension=m3u8
-#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio_0",CHANNELS="2",NAME="English",LANGUAGE="en",DEFAULT=YES,AUTOSELECT=YES,URI="http://ledir.thund.re:80/play/live.php?mac=00:1A:79:22:14:F3&stream=333495&extension=m3u8"
+https://ns.ben44mcc.workers.dev/live/stream-351530_lsd.m3u8?auth_key=1734811236-0-0-e7aec1494e34af8a2c6d2f11f953c942
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio_0",CHANNELS="2",NAME="English",LANGUAGE="en",DEFAULT=YES,AUTOSELECT=YES,URI="https://ns.ben44mcc.workers.dev/live/stream-351530_lsd.m3u8?auth_key=1734811236-0-0-e7aec1494e34af8a2c6d2f11f953c942"
