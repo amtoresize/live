@@ -2,5 +2,5 @@
 #EXT-X-VERSION:4
 #EXT-X-INDEPENDENT-SEGMENTS
 #EXT-X-STREAM-INF:BANDWIDTH=4370178,RESOLUTION=1280x720,FRAME-RATE=60,CODECS="mp4a.40.2,avc1.4d4020",AUDIO="audio_0"
-https://ns.ben44mcc.workers.dev/live/stream-9912077_lsd.m3u8?auth_key=1735377633-0-0-d2b7cf3d358a1db89c5122f3f0f946e9
-#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio_0",CHANNELS="2",NAME="English",LANGUAGE="en",DEFAULT=YES,AUTOSELECT=YES,URI="https://ns.ben44mcc.workers.dev/live/stream-9912077_lsd.m3u8?auth_key=1735377633-0-0-d2b7cf3d358a1db89c5122f3f0f946e9"
+https://ns.ben44mcc.workers.dev/live/stream-9912096_lsd.m3u8?auth_key=1735385879-0-0-bb6ce1f05baae8971c53f5f3b9594650
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="audio_0",CHANNELS="2",NAME="English",LANGUAGE="en",DEFAULT=YES,AUTOSELECT=YES,URI="https://ns.ben44mcc.workers.dev/live/stream-9912096_lsd.m3u8?auth_key=1735385879-0-0-bb6ce1f05baae8971c53f5f3b9594650"
