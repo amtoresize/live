@@ -1,4 +1,4 @@
 #EXTM3U
 #EXT-X-VERSION:3
 #EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://agnia.ben44mcc.workers.dev/live/ballbar_37220.m3u8
+https://ns.ben44mcc.workers.dev/live/stream-256080_lsd.m3u8?auth_key=1737041734-0-0-aaf3939e9e4ffdce546325062f4ec90a
