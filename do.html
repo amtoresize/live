@@ -1,272 +1,127 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="en">
 <head>
-    <meta name="robots" content="noindex, nofollow" />
-    <meta name="referrer" content="no-referrer" />
-	
-    <style type="text/css">
-        body {
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta http-equiv="cache-control" content="max-age=0" />
+  <meta http-equiv="cache-control" content="no-cache" />
+  <meta http-equiv="expires" content="0" />
+  <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+  <meta http-equiv="pragma" content="no-cache" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="robots" content="noindex" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/video.js@8.19.1/dist/video-js.min.css" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-        #player {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            z-index: 0;
-            top: 0px;
-            right: 0;
-            left: 0;
-            bottom: 0px;
-        }
-      .konten-atas {
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  background-color: #000;
+  font-family: "Oswald", sans-serif;
+  font-size: 18px;
+}
+
+.video-section {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: #000;
+}
+
+#player {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.konten-bawah {
-  position: relative;
+
+/* Video.js customizations */
+.video-js {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: transparent !important;
 }
-      #stretching-button {
-      padding: 3px 3px;
-      margin-right: 3px;
-      background-color: blue;
-      color: white;
-      border: none;
-      border-radius: 3px;
-      cursor: pointer;
-      font-size: 13px;
-    }
 
-    #stretching-button:hover {
-      background-color: black;
-    }
-    </style>
-    <script src="https://ssl.p.jwpcdn.com/player/v/8.27.1/jwpsrv.js"></script>
-    <script src="https://ssl.p.jwpcdn.com/player/v/8.27.1/jwplayer.js"></script>
-    <script src="https://ssl.p.jwpcdn.com/player/v/8.27.1/provider.shaka.js"></script>
-    <script src="https://ssl.p.jwpcdn.com/player/v/8.27.1/polyfills.webvtt.js"></script>
-    <script>
-        jwplayer.key = 'XSuP4qMl+9tK17QNb+4+th2Pm9AWgMO/cYH8CI0HGGr7bdjo';
-    </script>
-   <link rel="stylesheet" href="https://arjunaaaaa.github.io/lsbtv/gaya.css" />
-   <link rel="stylesheet" href="https://reisyah.github.io/player/jwplayer/style.css" />
+.video-js .vjs-big-play-button {
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  border-radius: 50% !important;
+  width: 80px !important;
+  height: 80px !important;
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+}
 
-  
-    <script>
-        
-        function periksaDomain() {
-            var url = window.location.href; 
-            var domainList = ["raw.githack.com", "reisyah.github.io", "arjunaaaaa.github.io", "livebola.repl.co"]; // 
+.video-js .vjs-loading-spinner {
+  border-color: rgba(107, 0, 255, 0.79) !important;
+  border-top-color: rgba(255, 255, 255, 0.9) !important;
+}
 
-            var domainValid = false;
+.video-js .vjs-control-bar {
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent) !important;
+  height: 3.5em !important;
+  padding: 0 10px !important;
+}
 
-            
-            for (var i = 0; i < domainList.length; i++) {
-                if (url.indexOf(domainList[i]) !== -1) {
-                    domainValid = true;
-                    break;
-                }
-            }
+.video-js .vjs-progress-control {
+  position: absolute !important;
+  top: -10px !important;
+  width: 100% !important;
+  height: 10px !important;
+}
 
-            
-            if (!domainValid) {
-                window.location.href = "https://api.allorigins.win/raw"; 
-            }
-        }
-    </script>
+.video-js .vjs-progress-holder {
+  margin: 0 !important;
+  height: 100% !important;
+}
 
-  
+.video-js .vjs-play-progress {
+  background-color: rgba(107, 0, 255, 0.79) !important;
+}
 
-<meta name='google-adsense-platform-account' content='ca-host-pub-1556223355139109'/>
-<meta name='google-adsense-platform-domain' content='blogspot.com'/>
-</head>
+.video-js .vjs-volume-panel {
+  order: 1 !important;
+}
 
+.video-js .vjs-fullscreen-control {
+  order: 2 !important;
+}
 
+.video-js .vjs-remaining-time {
+  display: none !important;
+}
 
-<body bgcolor='black' style='margin:0' oncontextmenu='return false' onkeydown='return false' onmousedown='return false' onload="periksaDomain();">
-    <script type="text/javascript">
-        function getParameterByName(name) {
-            name = name.replace(/[\[]/, "\[").replace(/[\]]/, "\]");
-            var regex = new RegExp("[\?&]" + name + "=([^&#]*)"),
-                results = regex.exec(location.search);
-            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-        }
-
-        var file = getParameterByName('file');
-        var keyid = getParameterByName('keyid');
-        var key = getParameterByName('key');
-        var getIMG = getParameterByName('img');
-        var getRASIO = getParameterByName('rasio');
-      var gons = getParameterByName('ns');
-    </script>
-
-<div id="player"> </div>
-
-  <!--
-  <div class="konten-atas">
-	<div class="Marquee-box">
-   <marquee class="MyMarquee" id="my_marquee" direction="top" behavior="1" scrollamount="5" onmouseover="this.stop()" onmouseout="this.start()">
-     <div>   </div></marquee>
- </div>
-
-       
+.video-js:hover .vjs-big-play-button {
+  background-color: rgba(107, 0, 255, 0.5) !important;
+}
+</style>
+<body oncontextmenu="return false" onkeydown="return false" onmousedown="return false">
+  <div class="video-section">
+    <video id="player" class="video-js vjs-default-skin" autoplay muted controls playsinline crossorigin>
+    </video>
   </div>
-
-
-  <div class="konten-atas">
- 
-    
-   <button id="stretching-button">Ganti Aspek Rasio
-       <button id="stretching-button" onclick="openNewLink()">NS Player</button>
-       
-  </div>
--->
-
-  
-<div id='fixedban' style='width:100%;margin:auto;text-align:center;float:none;overflow:hidden;display:scroll;position:;bottom:100;z-index:999;-webkit-transform:translateZ(0);'>
-<div>
-<a id='close-fixedban' onclick='document.getElementById("fixedban").style.display = "none";' style='cursor:pointer;'>
-  <img alt='close' src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGJFN_e-FqZfALKArTd9s35T5YdiXexGOuwBg4FSQ7jisPMyYMVGSQUrZFwoalpqHFG8S8tPtNHxVbS5ucVxZPK0MlmgZ8CVrqhiPr-ihK5H1cOe4BuACap03B7BzpWGP0m5_hnpIDoXIr/s1600/btn_close.gif' title='close button' style='vertical-align:middle;'/></a>
-
-  
-<div style='text-align:center;display:block;max-width:80%;height:auto;overflow:hidden;margin:auto'>
-  <img src='https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGJFN_e-FqZfALKArTd9s35T5YdiXexGOuwBg4FSQ7jisPMyYMVGSQUrZFwoalpqHFG8S8tPtNHxVbS5ucVxZPK0MlmgZ8CVrqhiPr-ihK5H1cOe4BuACap03B7BzpWGP0m5_hnpIDoXIr/s1600/btn_close.gif' style='vertical-align:middle;margin-top:-10px;'/>
-		<center>
-		<fieldset class="btn0">
-  <legend class="btn1" >ASPEK RASIO</legend>
-   <button id="stretching-button">FILL/FIT
-     <button id="stretching-button" onclick="refreshPage ()">REFRESH!
-   
- </a>
-</fieldset>
-		  
-		</center>
-	</div>
-		</div>
-
-	
-
-
-  
-    <script type="text/javascript">
-        var player = jwplayer("player");
-
-        player.setup({
-            playlist: [{
-                "image": getIMG,
-                "sources": [{
-                    "default": false,
-                    "type": "application/dash+xml",
-                    "file": file,
-                    "drm": {
-                        "clearkey": {
-                            "keyId": keyid,
-                            "key": key
-                        }
-                    },
-                    "label": "0"
-                }]
-            }],
-            width: "100%",
-            height: "100%",
-            aspectratio: "16:9",
-	    stretching: 'uniform',
-            autostart: true,
-		mute: false,
-            logo: {
-                file:"",
-              link: 'https://api.allorigins.win/raw',
-                position: 'bottom-right',
-
-            
-             },
-		captions: {
-		        color: '#FFF',
-		         fontSize: 15,
-		         backgroundOpacity: 0,
-		         edgeStyle: 'raised' 
-		    },
-          
-            cast: {},
-            //sharing: {}
-        });
-
-      function toggleStretchingMode() {
-    player.setConfig({
-      stretching: player.getConfig().stretching === "uniform" ? "exactfit" : "uniform"
-    });
-  }
-
-  // Tambahkan event listener ke tombol
-  const stretchingButton = document.getElementById("stretching-button");
-  stretchingButton.addEventListener("click", toggleStretchingMode);
-
-
-
-        // Listener untuk memastikan pemutar JW Player telah dimuat sebelum mengaksesnya
-        jwplayer().on('ready', function () {
-            player = jwplayer('player');
-        });
-    </script>
-
-	
-	<script>
-        function openNewLink() {
-            // Replace 'https://www.example.com' with the URL you want to open
-            var newLink = gons;
-            
-            // Open the new link in a new window or tab
-            window.open(newLink, '_blank');
-        }
-  </script>
-	     <script type="text/javascript" src='https://reisyah.github.io/ngopy/function.js'></script>
-  
-		</script>
-
-    <!--direct link-->
-    <script type='text/javascript'>
-        var isCtrl = false;
-        document.onkeyup = function(e) {
-            if (e.which == 17)
-                isCtrl = false;
-        }
-        document.onkeydown = function(e) {
-            if (e.which == 17)
-                isCtrl = true;
-            if ((e.which == 85) || (e.which == 67) && isCtrl == true) {
-                // alert(%8Keyboard shortcuts are cool!%9);
-                return false;
-            }
-        }
-        var isNS = (navigator.appName == "Netscape") ? 1 : 0;
-        if (navigator.appName == "Netscape") document.captureEvents(Event.MOUSEDOWN || Event.MOUSEUP);
-
-        function mischandler() {
-            return false;
-        }
-
-        function mousehandler(e) {
-            var myevent = (isNS) ? e : event;
-            var eventbutton = (isNS) ? myevent.which : myevent.button;
-            if ((eventbutton == 2) || (eventbutton == 3)) return false;
-        }
-        document.oncontextmenu = mischandler;
-        document.onmousedown = mousehandler;
-        document.onmouseup = mousehandler;
-    </script>
-<script type="text/javascript" src="https://reisyah.github.io/ngopy/function.js"></script>
-  
-	     
-	<!--
-    <script>
-        if (window == window.top) document.location = "https://paseotv1.blogspot.com/"
-    </script>
-
-	       
-	-->
 </body>
-
+<script type="text/javascript" src="https://raw.githack.com/donelfantastic/webiptv/refs/heads/main/embed/v4/script.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/donelfantastic/donelfantastic.github.io@refs/heads/main/src/library/jquery.min.js"></script>  
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/video.js@8.19.1/dist/video.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/murid-nakal/mn@refs/heads/main/library/videojs-mpegts/mpegts.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/gh/murid-nakal/mn@refs/heads/main/library/videojs-mpegts/videojs-mpegts.js"></script>
+<script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>  
 </html>
