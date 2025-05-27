@@ -1,0 +1,25 @@
+#EXTM3U
+#EXTINF:-1 group-logo="" tvg-logo="https://i.ibb.co/tpBqc3q/ezgif-2-d425b0dc45-unscreen.gif" group-title="Badminton", Court 1 | 08:00 AM
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://alldownplay.xyz
+#EXTVLCOPT:http-referrer=https://alldownplay.xyz/
+#EXTVLCOPT:http-origin=https://alldownplay.xyz
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+bet8021132
+
+#EXTINF:-1 group-logo="" tvg-logo="https://i.ibb.co/tpBqc3q/ezgif-2-d425b0dc45-unscreen.gif" group-title="Badminton", Court 2 | 08:00 AM
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://alldownplay.xyz
+#EXTVLCOPT:http-referrer=https://alldownplay.xyz/
+#EXTVLCOPT:http-origin=https://alldownplay.xyz
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+bet8021019
+
+#EXTM3U
+#EXTINF:-1 group-logo="" tvg-logo="https://i.ibb.co/tpBqc3q/ezgif-2-d425b0dc45-unscreen.gif" group-title="Badminton", Court 3 | 08:00 AM
+#KODIPROP:inputstreamaddon=inputstream.adaptive
+#KODIPROP:inputstream.adaptive.stream_headers=origin=https://alldownplay.xyz
+#EXTVLCOPT:http-referrer=https://alldownplay.xyz/
+#EXTVLCOPT:http-origin=https://alldownplay.xyz
+#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36
+bet8021003
