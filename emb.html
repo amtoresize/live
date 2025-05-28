@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Embed Player</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+        #player-container {
+            width: 100%;
+            height: 100%;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="player-container">
+        <iframe id="mastrotv" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
+    </div>
+
+    <script>
+        // Get the channel ID from URL parameter
+        function getChannelId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Construct the iframe src URL
+        function constructIframeUrl(channelId) {
+            if (!channelId) {
+                console.error('No channel ID provided in URL parameter');
+                return null;
+            }
+            return `https://topembed.pw/channel/${encodeURIComponent(channelId)}`;
+        }
+
+        // Initialize the player
+        function initPlayer() {
+            const channelId = getChannelId();
+            const iframeUrl = constructIframeUrl(channelId);
+            
+            if (iframeUrl) {
+                document.getElementById('mastrotv').src = iframeUrl;
+            } else {
+                document.getElementById('player-container').innerHTML = 
+                    '<p style="text-align:center;margin-top:50px;">Error: No channel ID provided. Use format skrip.html?id=CHANNEL_ID</p>';
+            }
+        }
+
+        // Initialize when page loads
+        window.onload = initPlayer;
+    </script>
+</body>
+</html>
