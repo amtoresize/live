@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Embed Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body, html {
+        html, body {
             margin: 0;
             padding: 0;
             height: 100%;
-            overflow: hidden;
-        }
-        #player-container {
-            width: 100%;
-            height: 100%;
+            background-color: black;
         }
         iframe {
+            display: block;
             width: 100%;
             height: 100%;
             border: none;
@@ -21,41 +20,32 @@
     </style>
 </head>
 <body>
-    <div id="player-container">
-        <iframe id="mastrotv" allowfullscreen sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
-    </div>
 
-    <script>
-        // Get the channel ID from URL parameter
-        function getChannelId() {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id');
-        }
+<script>
+    // Ambil parameter "url" dari query string
+    const params = new URLSearchParams(window.location.search);
+    const url = params.get('url');
 
-        // Construct the iframe src URL
-        function constructIframeUrl(channelId) {
-            if (!channelId) {
-                console.error('No channel ID provided in URL parameter');
-                return null;
-            }
-            return `https://topembed.pw/channel/${encodeURIComponent(channelId)}`;
-        }
+    if (url) {
+        // Buat elemen iframe dan tambahkan ke dalam body
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.allow = 'encrypted-media';
+        iframe.width = '640';
+        iframe.height = '360';
+        iframe.scrolling = 'no';
+        iframe.frameBorder = '0';
+        iframe.allowFullscreen = true;
 
-        // Initialize the player
-        function initPlayer() {
-            const channelId = getChannelId();
-            const iframeUrl = constructIframeUrl(channelId);
-            
-            if (iframeUrl) {
-                document.getElementById('mastrotv').src = iframeUrl;
-            } else {
-                document.getElementById('player-container').innerHTML = 
-                    '<p style="text-align:center;margin-top:50px;">Error: No channel ID provided. Use format skrip.html?id=CHANNEL_ID</p>';
-            }
-        }
+        // Untuk full-page responsif, override ukuran
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
 
-        // Initialize when page loads
-        window.onload = initPlayer;
-    </script>
+        document.body.appendChild(iframe);
+    } else {
+        document.body.innerHTML = '<p style="color:white;text-align:center;margin-top:20%;">URL parameter is missing.</p>';
+    }
+</script>
+
 </body>
 </html>
