@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Embed Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: black;
+        }
+        iframe {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    // Ambil parameter "url" dari query string
+    const params = new URLSearchParams(window.location.search);
+    const url = params.get('url');
+
+    if (url) {
+        // Buat elemen iframe dan tambahkan ke dalam body
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.allow = 'encrypted-media';
+        iframe.width = '640';
+        iframe.height = '360';
+        iframe.scrolling = 'no';
+        iframe.frameBorder = '0';
+        iframe.allowFullscreen = true;
+
+        // Tambahkan atribut sandbox untuk keamanan
+        // Contoh ini mengizinkan fullscreen dan menjalankan skrip
+        iframe.sandbox = 'allow-scripts allow-same-origin allow-presentation allow-forms allow-modals allow-popups allow-top-navigation-by-user-activation allow-downloads allow-pointer-lock allow-orientation-lock allow-popups-to-escape-sandbox allow-fullscreen';
+
+        // Untuk full-page responsif, override ukuran
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+
+        document.body.appendChild(iframe);
+    } else {
+        document.body.innerHTML = '<p style="color:white;text-align:center;margin-top:20%;">URL parameter is missing.</p>';
+    }
+</script>
+
+</body>
+</html>
