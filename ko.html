@@ -27,8 +27,9 @@
   </style>
 </head>
 <body>
+  <!-- ❌ Hapus attribute "controls" -->
   <div id="video-container">
-    <video id="video" autoplay controls></video>
+    <video id="video" autoplay></video>
   </div>
 
   <script>
@@ -38,7 +39,6 @@
     }
 
     function initApp() {
-      // Shaka UI setup
       const video = document.getElementById('video');
       const videoContainer = document.getElementById('video-container');
       const ui = video['ui'] = new shaka.ui.Overlay(
