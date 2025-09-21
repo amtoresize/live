@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shaka Player - M3U8</title>
+  <!-- Shaka Player UI + CSS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.15.10/shaka-player.ui.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.15.10/controls.min.css">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #000;
+      overflow: hidden;
+    }
+    #video-container {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="video-container">
+    <video id="video" autoplay controls></video>
+  </div>
+
+  <script>
+    function getUrlParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function initApp() {
+      // Shaka UI setup
+      const video = document.getElementById('video');
+      const videoContainer = document.getElementById('video-container');
+      const ui = video['ui'] = new shaka.ui.Overlay(
+        new shaka.Player(video),
+        videoContainer,
+        video
+      );
+      const controls = ui.getControls();
+      const player = controls.getPlayer();
+
+      // Error handling
+      player.addEventListener('error', e => console.error('Error', e));
+      controls.addEventListener('error', e => console.error('UI Error', e));
+
+      // Load stream from ?url=
+      const streamUrl = getUrlParam('url');
+      if (!streamUrl) {
+        alert("Parameter ?url= tidak ditemukan!");
+        return;
+      }
+
+      player.load(streamUrl).then(() => {
+        console.log("Stream loaded:", streamUrl);
+      }).catch(err => {
+        console.error("Load error", err);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
