@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer" />
+    <title>HLS Clear Key Player</title>
+    
+    <script src="https://cdn.jsdelivr.net/gh/Carryway/file@master/shaka-player.ui.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Carryway/file@master/controls.css">
+
+    <style>
+html,
+body {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		background-image: url(https://www.pngmart.com/files/22/Logo-NBA-Transparent-PNG.png);
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+		background-color: black;
+}
+
+.shaka-video-container {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 100%;
+		height: 100%;
+}
+
+.shaka-video {
+		width: 100%;
+		height: 100%;
+}
+
+/* Hilangkan volume bar */
+.shaka-volume-bar-container {
+		display: none !important;
+}
+
+/* Button icons (play, pause, etc) */
+.shaka-controls-button-panel button {
+		color: #f1ff00 !important;
+}
+
+/* Tombol Unmute besar */
+.player-unmute {
+		position: absolute;
+		top: 10px;
+		right: 12px;
+		z-index: 9999;
+		display: none;
+		padding: 10px 12px;
+		border: 0;
+		border-radius: 999px;
+		background: rgba(0, 0, 0, .6);
+		color: #fdff00;
+		font-family: 'Roboto', sans-serif;
+		font-weight: 700;
+		font-size: 15px;
+		line-height: 1;
+		align-items: center;
+		justify-content: center;
+		cursor: pointer;
+}
+
+.player-unmute:hover {
+		background: rgba(0, 0, 0, .75);
+		color: #e6e800;
+}
+
+.player-unmute svg {
+		display: inline-block;
+		vertical-align: middle;
+}
+    </style>
+
+    <script disable-devtool-auto src="https://cdn.jsdelivr.net/npm/disable-devtool"></script>
+	<script src="https://kltraid.pages.dev/js/smartlink-rotator.js"></script>
+</head>
+
+<body>
+    <center>
+        <div data-shaka-player-container style="width: 100%; height: 100%;" shaka-controls="true" class="shaka-video-container">
+            <video autoplay muted playsinline data-shaka-player id="video" class="shaka-video"></video>
+        </div>
+    </center>
+  
+    <script src="https://kltraid.pages.dev/js/playernba.js"></script>
+  
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"dd39c3258c2047d8b5cb2a06c67c3f8a","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
