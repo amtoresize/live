@@ -1,4 +1,16 @@
-#EXTM3U
+                #EXTM3U
 #EXT-X-VERSION:3
-#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=3000000
-https://tvpull.careryun.com/live/ballbar_18220.m3u8
+#EXT-X-INDEPENDENT-SEGMENTS
+#EXT-X-MEDIA:TYPE=AUDIO,GROUP-ID="default-audio",NAME="audio1",DEFAULT=NO,AUTOSELECT=YES,LANGUAGE="ar",URI="https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/manifest/audio1/192kbps/audio.m3u8"
+#EXT-X-STREAM-INF:BANDWIDTH=2592000,CODECS="avc1.640028,mp4a.40.2",RESOLUTION=1920x1080,AUDIO="default-audio",FRAME-RATE=25.000
+https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/manifest/video/1080p2400kbps/video.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=542000,CODECS="avc1.640015,mp4a.40.2",RESOLUTION=512x288,AUDIO="default-audio",FRAME-RATE=25.000
+https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/manifest/video/288p350kbps/video.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=692000,CODECS="avc1.64001E,mp4a.40.2",RESOLUTION=640x360,AUDIO="default-audio",FRAME-RATE=25.000
+https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/manifest/video/360p500kbps/video.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=942000,CODECS="avc1.64001E,mp4a.40.2",RESOLUTION=832x468,AUDIO="default-audio",FRAME-RATE=25.000
+https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/manifest/video/468p750kbps/video.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=1392000,CODECS="avc1.64001F,mp4a.40.2",RESOLUTION=1024x576,AUDIO="default-audio",FRAME-RATE=25.000
+https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/manifest/video/576p1200kbps/video.m3u8
+#EXT-X-STREAM-INF:BANDWIDTH=1942000,CODECS="avc1.64001F,mp4a.40.2",RESOLUTION=1280x720,AUDIO="default-audio",FRAME-RATE=25.000
+https://shd-gcp-live.edgenextcdn.net/live/bitmovin-mbc-masr-2/754931856515075b0aabf0e583495c68/manifest/video/720p1750kbps/video.m3u8
