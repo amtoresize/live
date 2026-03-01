@@ -1,10 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="en">
- 
+  
 <head>
   <title>Player</title>
   <meta charset="UTF-8">
   <!-- <meta name="referrer" content="no-referrer">-->
+
   <script src="https://cdn.bitmovin.com/player/web/8/bitmovinplayer.js"></script>
   <style>
     html, body {
@@ -13,50 +15,39 @@
       background: black;
       overflow: hidden;
     }
-    #player {
-      width: 100%;
-      height: 100%;
+    #player { 
+      width: 100%; 
+      height: 100%; 
       position: relative;
     }
-   
+    
     /* Video element styling - lebih spesifik */
     #player > div > video {
       width: 100% !important;
       height: 100% !important;
       object-fit: cover;
     }
-  
+   
     /* Logo bitmovin */
     .bmpui-ui-watermark { display: none !important; }
-   
+    
     /* Tombol settings */
     .bmpui-ui-settings-button { display: none !important; }
+
     /* Tombol pip */
     .bmpui-ui-pip-toggle-button { display: none !important; }
+
     /* Tombol AirPlay */
     .bmpui-ui-airplay-toggle-button { display: none !important; }
 
-    /* ────────────────────────────────────────────────
-       BAGIAN INI DIUBAH: SEMUA CONTROLS CUSTOM DISEMBUNYIKAN
-    ──────────────────────────────────────────────── */
-    .all-controls,
-    .show-controls-btn,
-    .mode-indicator {
-      display: none !important;
-    }
-
-    /* Kalau mau lebih aman, hilangkan juga event listener JS nanti,
-       tapi untuk sekarang cukup CSS ini sudah bikin semuanya invisible */
-
-    /* (CSS tombol & layout lain boleh dibiarkan atau dihapus kalau mau ringkas,
-       tapi biar aman saya biarkan dulu supaya struktur tetap sama) */
+    /* Container untuk semua controls */
     .all-controls {
       position: fixed;
       top: 15px;
       left: 15px;
-      z-index: 10000;
+      z-index: 10000; /* Lebih tinggi dari player UI */
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: wrap; /* Bisa wrap ke baris baru jika tidak cukup space */
       gap: 4px;
       background: rgba(0, 0, 0, 0.85);
       border-radius: 4px;
@@ -65,13 +56,16 @@
       border: 1px solid rgba(255, 255, 255, 0.15);
       transition: all 0.3s ease;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-      max-width: 95vw;
+      max-width: 95vw; /* Maksimal 95% lebar viewport */
     }
+
     .all-controls.hidden {
       opacity: 0;
       visibility: hidden;
       transform: translateX(20px);
     }
+
+    /* Style umum untuk semua tombol - RESPONSIVE */
     .control-btn {
       background: rgba(50, 50, 50, 0.9);
       color: white;
@@ -79,24 +73,27 @@
       padding: 4px 8px;
       border-radius: 3px;
       cursor: pointer;
-      font-size: clamp(9px, 1.5vw, 12px);
+      font-size: clamp(9px, 1.5vw, 12px); /* Responsive font size */
       font-weight: 500;
       transition: all 0.2s ease;
-      min-width: 45px;
-      max-width: 80px;
+      min-width: 45px; /* Minimum width */
+      max-width: 80px; /* Maximum width */
       text-align: center;
       letter-spacing: 0.3px;
-      flex: 1 1 auto;
-      white-space: nowrap;
+      flex: 1 1 auto; /* Flexible sizing */
+      white-space: nowrap; /* Text tidak wrap */
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    /* Media query untuk device kecil */
     @media (max-width: 768px) {
       .all-controls {
         gap: 3px;
         padding: 4px;
         max-width: 90vw;
       }
+      
       .control-btn {
         padding: 3px 6px;
         min-width: 40px;
@@ -104,6 +101,8 @@
         font-size: clamp(8px, 1.2vw, 10px);
       }
     }
+
+    /* Media query untuk device sangat kecil */
     @media (max-width: 480px) {
       .all-controls {
         flex-direction: row;
@@ -112,6 +111,7 @@
         padding: 3px;
         max-width: 85vw;
       }
+      
       .control-btn {
         padding: 2px 4px;
         min-width: 35px;
@@ -119,17 +119,22 @@
         font-size: clamp(7px, 1vw, 9px);
       }
     }
+
     .control-btn:hover {
       background: rgba(80, 80, 80, 0.9);
       transform: translateY(-1px);
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
+
+    /* Tombol scaling aktif */
     .control-btn.active {
       background: linear-gradient(135deg, #e50914, #b2070d);
       border-color: #e50914;
       box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
     }
-    .exo-btn, .shaka-btn, .ns-btn {
+
+    /* Tombol EXO - warna hijau sama seperti SHAKA */
+    .exo-btn {
       background: linear-gradient(135deg, #27ae60, #219653);
       color: white;
       border: 1px solid rgba(39, 174, 96, 0.5);
@@ -137,11 +142,46 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .exo-btn:hover, .shaka-btn:hover, .ns-btn:hover {
+
+    .exo-btn:hover {
       background: linear-gradient(135deg, #219653, #1e8449);
       border-color: rgba(33, 150, 83, 0.7);
       box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
     }
+
+    /* Tombol SHAKA - warna hijau */
+    .shaka-btn {
+      background: linear-gradient(135deg, #27ae60, #219653);
+      color: white;
+      border: 1px solid rgba(39, 174, 96, 0.5);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .shaka-btn:hover {
+      background: linear-gradient(135deg, #219653, #1e8449);
+      border-color: rgba(33, 150, 83, 0.7);
+      box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+    }
+
+    /* Tombol SHAKA - warna hijau */
+    .ns-btn {
+      background: linear-gradient(135deg, #27ae60, #219653);
+      color: white;
+      border: 1px solid rgba(39, 174, 96, 0.5);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .ns-btn:hover {
+      background: linear-gradient(135deg, #219653, #1e8449);
+      border-color: rgba(33, 150, 83, 0.7);
+      box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+    }
+
+    /* Tombol close - sedikit lebih kecil */
     .close-btn {
       min-width: 25px;
       max-width: 35px;
@@ -149,10 +189,13 @@
       font-size: clamp(9px, 1.5vw, 11px);
       font-weight: bold;
     }
+
     .close-btn:hover {
       background: rgba(200, 50, 50, 0.9);
       border-color: rgba(255, 50, 50, 0.7);
     }
+
+    /* Tombol untuk tampilkan kembali controls */
     .show-controls-btn {
       position: fixed;
       top: 20px;
@@ -171,13 +214,25 @@
       transition: all 0.3s ease;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     }
+
     .show-controls-btn.visible {
       display: block;
     }
+
     .show-controls-btn:hover {
       background: rgba(30, 30, 30, 0.95);
       transform: translateY(-1px);
     }
+
+    /* Media query untuk show controls button */
+    @media (max-width: 768px) {
+      .show-controls-btn {
+        padding: 3px 6px;
+        font-size: clamp(7px, 1vw, 9px);
+      }
+    }
+
+    /* Indikator mode */
     .mode-indicator {
       position: fixed;
       top: 15px;
@@ -201,15 +256,17 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .mode-indicator.show {
       opacity: 1;
       transform: translateY(0);
     }
+
   </style>
 </head>
 <body>
 
-<!-- Semua controls dalam satu grup (tetap ada di HTML, tapi disembunyikan via CSS) -->
+<!-- Semua controls dalam satu grup -->
 <div class="all-controls" id="allControls">
   <button class="control-btn active" id="btnZoom" title="Ctrl+1">ZOOM</button>
   <button class="control-btn" id="btnFit" title="Ctrl+2">FIT</button>
@@ -217,10 +274,10 @@
   <button class="control-btn exo-btn" id="exoBtn" title="Buka tab baru dengan parameter NS">EXO</button>
   <button class="control-btn shaka-btn" id="shakaBtn" title="Beralih ke SHAKA Player">SHAKA</button>
   <button class="control-btn ns-btn" id="nsBtn" title="Beralih ke NS Player">NS PLAYER</button>
-  <button class="control-btn close-btn" id="btnClose" title="Sembunyikan controls">✕</button>
+   <button class="control-btn close-btn" id="btnClose" title="Sembunyikan controls">✕</button>
 </div>
 
-<!-- Tombol untuk tampilkan kembali controls (juga disembunyikan) -->
+<!-- Tombol untuk tampilkan kembali controls -->
 <button class="show-controls-btn" id="showControlsBtn">Rasio</button>
 
 <div id="player"></div>
