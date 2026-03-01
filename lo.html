@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embed Clean Player</title>
+    <title>Embed Clean Player - No Popup</title>
     <style>
         body {
             margin: 0;
@@ -47,10 +47,38 @@
             display: none;
             z-index: 1001;
         }
-        #content-frame {
+        #video-container {
             width: 100vw;
             height: 100vh;
+            position: relative;
+            display: none;
+        }
+        #video-player {
+            width: 100%;
+            height: 100%;
             border: none;
+        }
+        #popup-blocker-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .blocker-message {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            color: #ff4444;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 10000;
+            border: 1px solid #ff4444;
             display: none;
         }
     </style>
@@ -61,307 +89,363 @@
         <div>Memuat konten...</div>
     </div>
     <div id="error-message"></div>
-    <iframe id="content-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-downloads"></iframe>
+    
+    <div id="video-container">
+        <iframe id="video-player" 
+                sandbox="allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads"
+                allow="autoplay; encrypted-media; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+    </div>
+    
+    <div id="popup-blocker-overlay"></div>
+    <div id="blocker-message" class="blocker-message">🚫 Popup diblokir!</div>
 
     <script>
         (function() {
             'use strict';
             
-            // Daftar domain iklan yang akan diblokir
+            // Konfigurasi
             const BLOCKED_DOMAINS = [
                 'effectivegatecpm.com',
                 'pl25835327.effectivegatecpm.com',
                 'go.effectivegatecpm.com',
-                'cdn.effectivegatecpm.com'
+                'cdn.effectivegatecpm.com',
+                'popup',
+                'adserver',
+                'doubleclick',
+                'googleadservices'
             ];
             
-            // URL target dari parameter
+            // Ambil URL target
             const urlParams = new URLSearchParams(window.location.search);
             let targetUrl = urlParams.get('url');
             
             const loadingEl = document.getElementById('loading');
             const errorEl = document.getElementById('error-message');
-            const contentFrame = document.getElementById('content-frame');
+            const videoContainer = document.getElementById('video-container');
+            const videoPlayer = document.getElementById('video-player');
+            const blockerMessage = document.getElementById('blocker-message');
             
             if (!targetUrl) {
                 showError('Tidak ada URL yang diberikan');
                 return;
             }
             
-            // Pastikan URL valid
             try {
                 targetUrl = decodeURIComponent(targetUrl);
-                new URL(targetUrl); // Validasi URL
+                new URL(targetUrl);
             } catch (e) {
                 showError('URL tidak valid');
                 return;
             }
             
-            // Fungsi untuk menampilkan error
             function showError(message) {
                 loadingEl.style.display = 'none';
                 errorEl.textContent = message;
                 errorEl.style.display = 'block';
             }
             
-            // Fungsi untuk memblokir request ke domain tertentu
-            function blockAdRequests(frame) {
-                try {
-                    // Override fetch dan XHR untuk memblokir request
-                    const originalFetch = window.fetch;
-                    const originalXHROpen = XMLHttpRequest.prototype.open;
-                    const originalXHRSend = XMLHttpRequest.prototype.send;
-                    
-                    // Blokir fetch requests
-                    window.fetch = function(input, init) {
-                        const url = typeof input === 'string' ? input : input.url;
-                        if (isBlockedDomain(url)) {
-                            console.log('[Blocker] Fetch diblokir:', url);
-                            return Promise.reject(new Error('Request diblokir oleh ad blocker'));
-                        }
-                        return originalFetch.apply(this, arguments);
-                    };
-                    
-                    // Blokir XMLHttpRequest
-                    XMLHttpRequest.prototype.open = function(method, url, async, user, password) {
-                        if (isBlockedDomain(url)) {
-                            console.log('[Blocker] XHR diblokir:', url);
-                            this._blocked = true;
-                            // Buat error palsu
-                            setTimeout(() => {
-                                this.onerror && this.onerror(new Error('Request diblokir'));
-                            }, 0);
-                            return;
-                        }
-                        this._url = url;
-                        return originalXHROpen.apply(this, arguments);
-                    };
-                    
-                    XMLHttpRequest.prototype.send = function() {
-                        if (this._blocked) return;
-                        return originalXHRSend.apply(this, arguments);
-                    };
-                    
-                    // Blokir pembuatan elemen script dari domain terlarang
-                    const originalCreateElement = document.createElement;
-                    document.createElement = function(tagName) {
-                        const element = originalCreateElement.call(document, tagName);
-                        
-                        if (tagName.toLowerCase() === 'script') {
-                            // Intercept attribute setter untuk src
-                            let src = '';
-                            Object.defineProperty(element, 'src', {
-                                get: function() { return src; },
-                                set: function(value) {
-                                    if (isBlockedDomain(value)) {
-                                        console.log('[Blocker] Script diblokir:', value);
-                                        // Kembalikan elemen dummy yang tidak melakukan apa-apa
-                                        return;
-                                    }
-                                    src = value;
-                                    // Set properti asli
-                                    setTimeout(() => {
-                                        element.setAttribute('src', value);
-                                    }, 0);
-                                }
-                            });
-                        }
-                        
-                        return element;
-                    };
-                    
-                    // Juga intercept appendChild untuk script yang sudah dibuat
-                    const originalAppendChild = Node.prototype.appendChild;
-                    Node.prototype.appendChild = function(child) {
-                        if (child.tagName === 'SCRIPT' && child.src && isBlockedDomain(child.src)) {
-                            console.log('[Blocker] Append script diblokir:', child.src);
-                            return child; // Kembalikan tanpa menambahkan
-                        }
-                        return originalAppendChild.call(this, child);
-                    };
-                    
-                } catch (e) {
-                    console.error('Error setting up blocker:', e);
-                }
+            // Fungsi untuk menampilkan notifikasi popup diblokir
+            function showBlockerNotification() {
+                blockerMessage.style.display = 'block';
+                setTimeout(() => {
+                    blockerMessage.style.display = 'none';
+                }, 2000);
             }
             
-            // Helper untuk cek apakah URL termasuk domain terblokir
-            function isBlockedDomain(url) {
-                if (!url || typeof url !== 'string') return false;
-                try {
-                    const urlObj = new URL(url, window.location.origin);
-                    return BLOCKED_DOMAINS.some(domain => 
-                        urlObj.hostname.includes(domain) || 
-                        url.includes(domain)
-                    );
-                } catch (e) {
-                    // Jika URL relatif, cek stringnya
-                    return BLOCKED_DOMAINS.some(domain => url.includes(domain));
-                }
-            }
+            // STRATEGI 1: Override fungsi popup di window utama
+            (function blockPopups() {
+                // Simpan referensi asli
+                const originalOpen = window.open;
+                const originalAlert = window.alert;
+                const originalConfirm = window.confirm;
+                const originalPrompt = window.prompt;
+                
+                // Blokir window.open
+                window.open = function(url, name, features) {
+                    if (url && BLOCKED_DOMAINS.some(domain => url.includes(domain))) {
+                        console.log('[Popup Blocked]', url);
+                        showBlockerNotification();
+                        return null;
+                    }
+                    // Untuk URL yang aman, tetap izinkan tapi tangkap
+                    if (url) {
+                        try {
+                            const urlObj = new URL(url, window.location.origin);
+                            if (!BLOCKED_DOMAINS.some(domain => urlObj.hostname.includes(domain))) {
+                                return originalOpen.call(window, url, name, features);
+                            }
+                        } catch (e) {
+                            // URL relatif
+                            if (!BLOCKED_DOMAINS.some(domain => url.includes(domain))) {
+                                return originalOpen.call(window, url, name, features);
+                            }
+                        }
+                    }
+                    showBlockerNotification();
+                    return null;
+                };
+                
+                // Blokir dialog yang sering digunakan iklan
+                window.alert = function(message) {
+                    if (message && message.toLowerCase().includes('ad') || 
+                        message && message.toLowerCase().includes('iklan')) {
+                        showBlockerNotification();
+                        return;
+                    }
+                    return originalAlert.call(window, message);
+                };
+                
+                window.confirm = function(message) {
+                    if (message && (message.toLowerCase().includes('ad') || 
+                        message.toLowerCase().includes('iklan'))) {
+                        showBlockerNotification();
+                        return false;
+                    }
+                    return originalConfirm.call(window, message);
+                };
+                
+                window.prompt = function(message) {
+                    if (message && (message.toLowerCase().includes('ad') || 
+                        message.toLowerCase().includes('iklan'))) {
+                        showBlockerNotification();
+                        return null;
+                    }
+                    return originalPrompt.call(window, message);
+                };
+            })();
             
-            // Fungsi untuk membersihkan elemen iklan setelah halaman dimuat
-            function cleanAdElements() {
+            // STRATEGI 2: Blokir event yang memicu popup
+            document.addEventListener('click', function(e) {
+                const target = e.target;
+                if (target.tagName === 'A' && target.target === '_blank') {
+                    const href = target.href;
+                    if (href && BLOCKED_DOMAINS.some(domain => href.includes(domain))) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showBlockerNotification();
+                        console.log('[Link Blocked]', href);
+                    }
+                }
+            }, true);
+            
+            // STRATEGI 3: Blokir attempt navigasi yang mencurigakan
+            let lastLocationChange = Date.now();
+            const originalPushState = history.pushState;
+            const originalReplaceState = history.replaceState;
+            
+            history.pushState = function(state, title, url) {
+                if (url && typeof url === 'string' && BLOCKED_DOMAINS.some(domain => url.includes(domain))) {
+                    console.log('[PushState Blocked]', url);
+                    showBlockerNotification();
+                    return;
+                }
+                return originalPushState.apply(this, arguments);
+            };
+            
+            history.replaceState = function(state, title, url) {
+                if (url && typeof url === 'string' && BLOCKED_DOMAINS.some(domain => url.includes(domain))) {
+                    console.log('[ReplaceState Blocked]', url);
+                    showBlockerNotification();
+                    return;
+                }
+                return originalReplaceState.apply(this, arguments);
+            };
+            
+            // STRATEGI 4: Gunakan proxy dengan intercept request
+            async function loadContent() {
                 try {
-                    // Hapus elemen script yang berasal dari domain terblokir
-                    const scripts = document.querySelectorAll('script');
-                    scripts.forEach(script => {
-                        if (script.src && isBlockedDomain(script.src)) {
-                            console.log('[Cleaner] Menghapus script:', script.src);
-                            script.remove();
-                        }
-                    });
-                    
-                    // Hapus iframe iklan
-                    const iframes = document.querySelectorAll('iframe');
-                    iframes.forEach(iframe => {
-                        if (iframe.src && isBlockedDomain(iframe.src)) {
-                            console.log('[Cleaner] Menghapus iframe:', iframe.src);
-                            iframe.remove();
-                        }
-                    });
-                    
-                    // Hapus elemen dengan atribut data yang mencurigakan
-                    const adSelectors = [
-                        '[class*="ad"]',
-                        '[class*="ads"]',
-                        '[class*="banner"]',
-                        '[id*="ad"]',
-                        '[id*="ads"]',
-                        '[id*="banner"]'
+                    // Coba beberapa proxy untuk redundansi
+                    const proxies = [
+                        `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
+                        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
+                        `https://thingproxy.freeboard.io/fetch/${encodeURIComponent(targetUrl)}`
                     ];
                     
-                    adSelectors.forEach(selector => {
-                        const elements = document.querySelectorAll(selector);
-                        elements.forEach(el => {
-                            // Cek apakah elemen ini berasal dari domain iklan
-                            const html = el.outerHTML;
-                            if (BLOCKED_DOMAINS.some(domain => html.includes(domain))) {
-                                console.log('[Cleaner] Menghapus elemen iklan');
-                                el.remove();
+                    let html = null;
+                    let proxyUsed = null;
+                    
+                    // Coba proxy satu per satu
+                    for (const proxy of proxies) {
+                        try {
+                            const response = await fetch(proxy, { 
+                                timeout: 10000,
+                                headers: {
+                                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                                }
+                            });
+                            if (response.ok) {
+                                html = await response.text();
+                                proxyUsed = proxy;
+                                break;
                             }
+                        } catch (e) {
+                            console.log('Proxy gagal:', proxy, e);
+                            continue;
+                        }
+                    }
+                    
+                    if (!html) {
+                        throw new Error('Semua proxy gagal');
+                    }
+                    
+                    // Bersihkan HTML secara agresif
+                    
+                    // 1. Hapus semua script yang mencurigakan
+                    BLOCKED_DOMAINS.forEach(domain => {
+                        const patterns = [
+                            `<script[^>]*src=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>\\s*<\\/script>`,
+                            `<script[^>]*>[^<]*${domain.replace(/\./g, '\\.')}[^<]*<\\/script>`,
+                            `<iframe[^>]*src=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>\\s*<\\/iframe>`,
+                            `<a[^>]*href=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>.*?<\\/a>`
+                        ];
+                        
+                        patterns.forEach(pattern => {
+                            const regex = new RegExp(pattern, 'gi');
+                            html = html.replace(regex, '');
                         });
                     });
                     
-                } catch (e) {
-                    console.error('Error cleaning ad elements:', e);
-                }
-            }
-            
-            // Fungsi utama untuk memuat konten
-            async function loadContent() {
-                try {
-                    // Gunakan proxy untuk mengambil konten
-                    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`;
-                    
-                    const response = await fetch(proxyUrl);
-                    if (!response.ok) throw new Error('Gagal mengambil konten');
-                    
-                    let html = await response.text();
-                    
-                    // Bersihkan HTML dari skrip iklan
-                    BLOCKED_DOMAINS.forEach(domain => {
-                        // Hapus script tags yang mengandung domain iklan
-                        const scriptRegex = new RegExp(`<script[^>]*src=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>\\s*<\\/script>`, 'gi');
-                        html = html.replace(scriptRegex, '');
-                        
-                        // Hapus script inline yang memuat domain iklan
-                        const inlineScriptRegex = new RegExp(`<script[^>]*>[^<]*${domain.replace(/\./g, '\\.')}[^<]*<\\/script>`, 'gi');
-                        html = html.replace(inlineScriptRegex, '');
-                        
-                        // Hapus iframe yang memuat domain iklan
-                        const iframeRegex = new RegExp(`<iframe[^>]*src=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>\\s*<\\/iframe>`, 'gi');
-                        html = html.replace(iframeRegex, '');
-                        
-                        // Hapus link tags yang memuat domain iklan
-                        const linkRegex = new RegExp(`<link[^>]*href=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>`, 'gi');
-                        html = html.replace(linkRegex, '');
+                    // 2. Hapus event handler yang mencurigakan
+                    const suspiciousEvents = ['onclick', 'onload', 'onmouseover', 'onfocus', 'onblur'];
+                    suspiciousEvents.forEach(event => {
+                        const regex = new RegExp(`${event}=["'][^"']*?(window\\.open|popup|ad|\\.open\\(|https?://)[^"']*?["']`, 'gi');
+                        html = html.replace(regex, '');
                     });
                     
-                    // Suntikkan script blocker ke dalam HTML
-                    const blockerScript = `
+                    // 3. Suntikkan script anti-popup yang super ketat
+                    const antiPopupScript = `
                         <script>
                             (function() {
-                                // Definisikan ulang fungsi blocker di dalam frame
-                                const BLOCKED_DOMAINS = ${JSON.stringify(BLOCKED_DOMAINS)};
+                                // Hancurkan semua fungsi yang bisa buat popup
+                                const noop = function() { return null; };
+                                const blockFunctions = [
+                                    'open', 'alert', 'confirm', 'prompt', 'print',
+                                    'showModalDialog', 'showModelessDialog'
+                                ];
                                 
-                                function isBlockedDomain(url) {
-                                    if (!url) return false;
-                                    return BLOCKED_DOMAINS.some(domain => url.includes(domain));
-                                }
+                                blockFunctions.forEach(func => {
+                                    try {
+                                        window[func] = noop;
+                                    } catch(e) {}
+                                });
                                 
-                                // Override fetch
-                                const originalFetch = window.fetch;
-                                window.fetch = function(input, init) {
-                                    const url = typeof input === 'string' ? input : input.url;
-                                    if (isBlockedDomain(url)) {
-                                        return Promise.reject(new Error('Blocked'));
-                                    }
-                                    return originalFetch.apply(this, arguments);
-                                };
-                                
-                                // Override XHR
-                                const originalXHROpen = XMLHttpRequest.prototype.open;
-                                XMLHttpRequest.prototype.open = function(method, url) {
-                                    if (isBlockedDomain(url)) {
-                                        this.abort();
-                                        return;
-                                    }
-                                    return originalXHROpen.apply(this, arguments);
-                                };
-                                
-                                // Blokir pembuatan elemen script
+                                // Override createElement untuk cegah iframe tersembunyi
                                 const originalCreateElement = document.createElement;
                                 document.createElement = function(tagName) {
-                                    const element = originalCreateElement.call(document, tagName);
-                                    if (tagName.toLowerCase() === 'script') {
-                                        Object.defineProperty(element, 'src', {
-                                            set: function(value) {
-                                                if (isBlockedDomain(value)) return;
-                                                element.setAttribute('src', value);
-                                            }
-                                        });
+                                    const el = originalCreateElement.call(document, tagName);
+                                    
+                                    if (tagName.toLowerCase() === 'iframe') {
+                                        // Buat iframe tidak berbahaya
+                                        setTimeout(() => {
+                                            try {
+                                                el.style.display = 'none';
+                                                el.width = '0';
+                                                el.height = '0';
+                                                if (el.contentWindow) {
+                                                    blockFunctions.forEach(func => {
+                                                        try {
+                                                            el.contentWindow[func] = noop;
+                                                        } catch(e) {}
+                                                    });
+                                                }
+                                            } catch(e) {}
+                                        }, 0);
                                     }
-                                    return element;
+                                    
+                                    return el;
                                 };
                                 
-                                // Hapus elemen iklan yang sudah ada
+                                // Periodic cleaner
                                 setInterval(function() {
-                                    const scripts = document.querySelectorAll('script[src]');
-                                    scripts.forEach(s => {
-                                        if (isBlockedDomain(s.src)) s.remove();
+                                    // Hapus semua iframe tersembunyi
+                                    const iframes = document.querySelectorAll('iframe');
+                                    iframes.forEach(iframe => {
+                                        const style = window.getComputedStyle(iframe);
+                                        if (style.display === 'none' || 
+                                            style.visibility === 'hidden' ||
+                                            iframe.width === '0' ||
+                                            iframe.height === '0' ||
+                                            iframe.offsetWidth === 0 ||
+                                            iframe.offsetHeight === 0) {
+                                            if (!iframe.closest('#video-player')) {
+                                                iframe.remove();
+                                            }
+                                        }
                                     });
                                     
-                                    const iframes = document.querySelectorAll('iframe[src]');
-                                    iframes.forEach(i => {
-                                        if (isBlockedDomain(i.src)) i.remove();
+                                    // Hapus div popup
+                                    const divs = document.querySelectorAll('div');
+                                    divs.forEach(div => {
+                                        if (div.style.position === 'fixed' || 
+                                            div.style.position === 'absolute') {
+                                            const html = div.outerHTML.toLowerCase();
+                                            if (html.includes('ad') || 
+                                                html.includes('popup') || 
+                                                html.includes('iklan')) {
+                                                div.remove();
+                                            }
+                                        }
                                     });
-                                }, 1000);
+                                }, 500);
                             })();
                         <\/script>
                     `;
                     
-                    // Sisipkan blocker script di awal head
-                    html = html.replace('<head>', '<head>' + blockerScript);
+                    // Sisipkan anti-popup script
+                    html = html.replace('<head>', '<head>' + antiPopupScript);
                     
-                    // Tulis ke iframe
-                    const iframeDoc = contentFrame.contentDocument || contentFrame.contentWindow.document;
-                    iframeDoc.open();
-                    iframeDoc.write(html);
-                    iframeDoc.close();
+                    // 4. Gunakan teknik sandbox ganda
+                    const blob = new Blob([html], { type: 'text/html' });
+                    const blobUrl = URL.createObjectURL(blob);
                     
-                    // Sembunyikan loading dan tampilkan frame
+                    // Set iframe src ke blob URL
+                    videoPlayer.src = blobUrl;
+                    
+                    // Tampilkan video container
                     loadingEl.style.display = 'none';
-                    contentFrame.style.display = 'block';
+                    videoContainer.style.display = 'block';
+                    
+                    // Bersihkan blob URL setelah digunakan
+                    videoPlayer.onload = function() {
+                        URL.revokeObjectURL(blobUrl);
+                    };
                     
                 } catch (error) {
-                    console.error('Error:', error);
-                    showError('Gagal memuat konten: ' + error.message);
+                    console.error('Error detail:', error);
+                    showError('Gagal memuat: ' + error.message);
+                    
+                    // Fallback: langsung akses URL dengan proteksi
+                    videoPlayer.src = targetUrl;
+                    loadingEl.style.display = 'none';
+                    videoContainer.style.display = 'block';
                 }
             }
             
-            // Mulai memuat konten
+            // STRATEGI 5: Intercept semua pesan postMessage yang mencurigakan
+            window.addEventListener('message', function(event) {
+                if (event.data && typeof event.data === 'string') {
+                    if (event.data.includes('popup') || event.data.includes('ad')) {
+                        event.stopImmediatePropagation();
+                        showBlockerNotification();
+                    }
+                }
+            }, true);
+            
+            // Mulai loading
             loadContent();
+            
+            // Periodic check untuk popup
+            setInterval(function() {
+                // Deteksi jika ada popup terbuka
+                if (window.top && window.top.document !== document) {
+                    // Kita berada di popup, coba tutup
+                    try {
+                        window.close();
+                    } catch(e) {}
+                }
+            }, 1000);
             
         })();
     </script>
