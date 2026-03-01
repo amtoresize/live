@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Embed Clean Player - No Popup</title>
+    <title>🔒 Zero-Popup Player</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
-            overflow: hidden;
-            background-color: black;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
         }
+        
+        body {
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: fixed;
+        }
+        
         #loading {
             position: fixed;
             top: 50%;
@@ -19,431 +26,436 @@
             transform: translate(-50%, -50%);
             color: white;
             text-align: center;
-            z-index: 1000;
+            z-index: 10000;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
         }
+        
         .spinner {
-            border: 4px solid rgba(255,255,255,0.3);
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
             border-radius: 50%;
-            border-top: 4px solid white;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 10px auto;
         }
+        
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
         #error-message {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            background: rgba(255,0,0,0.7);
+            background: rgba(255,0,0,0.9);
             padding: 20px;
             border-radius: 10px;
             text-align: center;
+            z-index: 10001;
             display: none;
-            z-index: 1001;
             max-width: 80%;
-            word-break: break-all;
         }
-        #debug-info {
-            position: fixed;
-            bottom: 10px;
-            left: 10px;
-            color: #666;
-            font-size: 12px;
-            background: rgba(0,0,0,0.5);
-            padding: 5px;
-            border-radius: 3px;
-            z-index: 10000;
-            display: none;
-        }
-        #video-container {
+        
+        #player-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100vw;
             height: 100vh;
-            position: relative;
-            display: none;
-        }
-        #video-player {
-            width: 100%;
-            height: 100%;
             border: none;
+            background: #000;
+            z-index: 1;
         }
-        #popup-blocker-overlay {
+        
+        #kill-switch-layer {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: transparent;
-            z-index: 9999;
+            z-index: 999999;
             pointer-events: none;
         }
-        .blocker-message {
+        
+        #blocker-stats {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(0,0,0,0.8);
-            color: #ff4444;
-            padding: 10px 20px;
+            bottom: 10px;
+            right: 10px;
+            color: #0f0;
+            font-family: monospace;
+            font-size: 12px;
+            background: rgba(0,0,0,0.7);
+            padding: 5px 10px;
             border-radius: 5px;
-            font-size: 14px;
-            z-index: 10000;
-            border: 1px solid #ff4444;
+            z-index: 1000000;
+            border: 1px solid #0f0;
             display: none;
+        }
+        
+        .popup-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ff4444;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000001;
+            font-size: 20px;
+            text-align: center;
+            animation: pulse 0.5s;
+            display: none;
+        }
+        
+        @keyframes pulse {
+            0% { transform: translate(-50%, -50%) scale(0.8); }
+            100% { transform: translate(-50%, -50%) scale(1); }
         }
     </style>
 </head>
 <body>
     <div id="loading">
         <div class="spinner"></div>
-        <div>Memuat konten...</div>
+        <div>Mengaktifkan protokol anti-popup...</div>
     </div>
+    
     <div id="error-message"></div>
-    <div id="debug-info"></div>
+    <div id="popup-alert" class="popup-alert">🚫 POPUP DIBLOKIR!</div>
+    <div id="blocker-stats">🛡️ Blocker Aktif: 0 popup diblokir</div>
     
-    <div id="video-container">
-        <iframe id="video-player" 
-                sandbox="allow-same-origin allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-downloads"
-                allow="autoplay; encrypted-media; picture-in-picture"
-                allowfullscreen>
-        </iframe>
-    </div>
+    <iframe id="player-layer" 
+            sandbox="allow-scripts allow-same-origin allow-forms"
+            allow="autoplay; encrypted-media"
+            style="width: 100vw; height: 100vh; border: none;">
+    </iframe>
     
-    <div id="popup-blocker-overlay"></div>
-    <div id="blocker-message" class="blocker-message">🚫 Popup diblokir!</div>
+    <div id="kill-switch-layer"></div>
 
     <script>
         (function() {
             'use strict';
             
-            // Aktifkan debug mode (hapus atau set false untuk production)
-            const DEBUG = true;
-            
-            function debug(message) {
-                if (DEBUG) {
-                    console.log('[DEBUG]', message);
-                    const debugEl = document.getElementById('debug-info');
-                    debugEl.style.display = 'block';
-                    debugEl.innerHTML = message;
-                }
-            }
-            
-            // Konfigurasi
-            const BLOCKED_DOMAINS = [
-                'effectivegatecpm.com',
-                'pl25835327.effectivegatecpm.com',
-                'go.effectivegatecpm.com',
-                'cdn.effectivegatecpm.com',
+            // ===== KONFIGURASI =====
+            const BLOCKED_KEYWORDS = [
+                'effectivegatecpm',
+                'pl25835327',
+                'doubleclick',
+                'googleadservices',
                 'popup',
                 'adserver',
-                'doubleclick',
-                'googleadservices'
+                'adservice',
+                'advertising',
+                'analytics',
+                'tracking',
+                'beacon',
+                'pixel'
             ];
             
-            // === PERBAIKAN UTAMA: Cara mengambil URL ===
-            debug('Mencoba mengambil parameter URL...');
+            let popupCount = 0;
+            let isInitialized = false;
             
-            // Ambil seluruh query string
-            const queryString = window.location.search;
-            debug('Query string: ' + queryString);
-            
-            // Cara 1: Menggunakan URLSearchParams (standar)
-            let targetUrl = null;
-            
-            try {
-                const urlParams = new URLSearchParams(queryString);
+            // ===== AMBIL URL =====
+            function getTargetUrl() {
+                // Method 1: Cari parameter di URL
+                const urlParams = new URLSearchParams(window.location.search);
+                let url = urlParams.get('link') || urlParams.get('url');
                 
-                // Coba ambil dari parameter 'url' (seperti di skrip asli)
-                targetUrl = urlParams.get('url');
-                debug('URL dari parameter "url": ' + targetUrl);
-                
-                // Jika tidak ada, coba dari parameter 'link' (sesuai skrip lo.html)
-                if (!targetUrl) {
-                    targetUrl = urlParams.get('link');
-                    debug('URL dari parameter "link": ' + targetUrl);
-                }
-                
-                // Jika masih tidak ada, coba ambil semua parameter
-                if (!targetUrl) {
-                    // Ambil parameter pertama yang ditemukan
-                    for (let [key, value] of urlParams.entries()) {
-                        if (value && value.startsWith('http')) {
-                            targetUrl = value;
-                            debug('URL dari parameter pertama: ' + key + ' = ' + value);
-                            break;
-                        }
-                    }
-                }
-            } catch (e) {
-                debug('Error dengan URLSearchParams: ' + e.message);
-            }
-            
-            // Cara 2: Parse manual jika URLSearchParams gagal
-            if (!targetUrl && queryString) {
-                debug('Mencoba parsing manual...');
-                // Hapus tanda ? di awal
-                const query = queryString.substring(1);
-                const pairs = query.split('&');
-                
-                for (let pair of pairs) {
-                    const eqIndex = pair.indexOf('=');
-                    if (eqIndex > 0) {
-                        const key = pair.substring(0, eqIndex);
-                        let value = pair.substring(eqIndex + 1);
-                        
-                        // Decode value
-                        try {
-                            value = decodeURIComponent(value);
-                        } catch (e) {}
-                        
-                        if (value && (value.startsWith('http://') || value.startsWith('https://'))) {
-                            targetUrl = value;
-                            debug('URL ditemukan manual: ' + key + ' = ' + value);
-                            break;
-                        }
-                    }
-                }
-            }
-            
-            // Cara 3: Cek apakah URL langsung diberikan setelah ?
-            if (!targetUrl && queryString && queryString.length > 1) {
-                // Mungkin URL langsung tanpa parameter name
-                let possibleUrl = queryString.substring(1);
-                try {
-                    possibleUrl = decodeURIComponent(possibleUrl);
-                    if (possibleUrl.startsWith('http://') || possibleUrl.startsWith('https://')) {
-                        targetUrl = possibleUrl;
-                        debug('URL langsung: ' + possibleUrl);
-                    }
-                } catch (e) {}
-            }
-            
-            const loadingEl = document.getElementById('loading');
-            const errorEl = document.getElementById('error-message');
-            const videoContainer = document.getElementById('video-container');
-            const videoPlayer = document.getElementById('video-player');
-            const blockerMessage = document.getElementById('blocker-message');
-            
-            // Validasi URL
-            if (!targetUrl) {
-                const errorMsg = 'Tidak ada URL yang diberikan. Query: ' + queryString;
-                debug(errorMsg);
-                showError(errorMsg);
-                return;
-            }
-            
-            // Bersihkan URL dari encoding ganda
-            try {
-                // Decode sampai benar-benar URL yang valid
-                let decodedUrl = targetUrl;
-                while (decodedUrl.includes('%')) {
+                if (url) {
                     try {
-                        const testDecode = decodeURIComponent(decodedUrl);
-                        if (testDecode === decodedUrl) break;
-                        decodedUrl = testDecode;
-                    } catch (e) {
-                        break;
-                    }
+                        url = decodeURIComponent(url);
+                        new URL(url); // Validasi
+                        return url;
+                    } catch(e) {}
                 }
-                targetUrl = decodedUrl;
-                debug('URL setelah decoding: ' + targetUrl);
                 
-                // Validasi URL
-                new URL(targetUrl);
-                debug('URL valid');
-            } catch (e) {
-                const errorMsg = 'URL tidak valid: ' + targetUrl + ' - Error: ' + e.message;
-                debug(errorMsg);
-                showError(errorMsg);
+                // Method 2: Cek hash
+                if (window.location.hash) {
+                    try {
+                        url = decodeURIComponent(window.location.hash.substring(1));
+                        new URL(url);
+                        return url;
+                    } catch(e) {}
+                }
+                
+                return null;
+            }
+            
+            const targetUrl = getTargetUrl();
+            
+            if (!targetUrl) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error-message').style.display = 'block';
+                document.getElementById('error-message').innerHTML = '❌ URL tidak ditemukan<br><small>URL harus diberikan melalui parameter ?link= atau ?url=</small>';
                 return;
             }
             
-            function showError(message) {
-                loadingEl.style.display = 'none';
-                errorEl.textContent = message;
-                errorEl.style.display = 'block';
+            // ===== STRATEGI 1: MATIKAN SEMUA FUNGSI BERBAHAYA =====
+            function executeInIframe(iframe, code) {
+                try {
+                    const win = iframe.contentWindow;
+                    const doc = iframe.contentDocument;
+                    
+                    if (!win || !doc) return false;
+                    
+                    // Suntikkan script ke iframe
+                    const script = doc.createElement('script');
+                    script.textContent = `
+                        (function() {
+                            ${code}
+                        })();
+                    `;
+                    doc.head.appendChild(script);
+                    return true;
+                } catch(e) {
+                    console.log('Gagal eksekusi di iframe:', e);
+                    return false;
+                }
             }
             
-            function showBlockerNotification() {
-                blockerMessage.style.display = 'block';
-                setTimeout(() => {
-                    blockerMessage.style.display = 'none';
-                }, 2000);
-            }
-            
-            // ... (fungsi blockPopups dan lainnya sama seperti sebelumnya) ...
-            // [Sisipkan semua fungsi blocker dari kode sebelumnya di sini]
-            
-            // Untuk menghemat space, saya akan menulis ulang fungsi utamanya:
-            
-            // STRATEGI 1: Override fungsi popup
-            (function blockPopups() {
+            // ===== STRATEGI 2: BUAT PERANGKAP POPUP GLOBAL =====
+            function setupGlobalTraps() {
+                // Trap di window utama
                 const originalOpen = window.open;
                 const originalAlert = window.alert;
                 const originalConfirm = window.confirm;
                 const originalPrompt = window.prompt;
                 
-                window.open = function(url, name, features) {
-                    if (url && BLOCKED_DOMAINS.some(domain => url.includes(domain))) {
-                        console.log('[Popup Blocked]', url);
-                        showBlockerNotification();
-                        return null;
-                    }
-                    if (url) {
-                        try {
-                            const urlObj = new URL(url, window.location.origin);
-                            if (!BLOCKED_DOMAINS.some(domain => urlObj.hostname.includes(domain))) {
-                                return originalOpen.call(window, url, name, features);
-                            }
-                        } catch (e) {
-                            if (!BLOCKED_DOMAINS.some(domain => url.includes(domain))) {
-                                return originalOpen.call(window, url, name, features);
-                            }
-                        }
-                    }
-                    showBlockerNotification();
+                window.open = function() {
+                    popupCount++;
+                    updateStats();
+                    showPopupAlert();
+                    console.log('🚫 Popup diblokir! Total:', popupCount);
                     return null;
                 };
                 
-                window.alert = function(message) {
-                    if (message && (message.toLowerCase().includes('ad') || message.toLowerCase().includes('iklan'))) {
-                        showBlockerNotification();
-                        return;
-                    }
-                    return originalAlert.call(window, message);
+                window.alert = window.confirm = window.prompt = function() {
+                    popupCount++;
+                    updateStats();
+                    showPopupAlert();
+                    return false;
                 };
                 
-                window.confirm = function(message) {
-                    if (message && (message.toLowerCase().includes('ad') || message.toLowerCase().includes('iklan'))) {
-                        showBlockerNotification();
-                        return false;
-                    }
-                    return originalConfirm.call(window, message);
-                };
-                
-                window.prompt = function(message) {
-                    if (message && (message.toLowerCase().includes('ad') || message.toLowerCase().includes('iklan'))) {
-                        showBlockerNotification();
-                        return null;
-                    }
-                    return originalPrompt.call(window, message);
-                };
-            })();
-            
-            // Fungsi utama loading
-            async function loadContent() {
-                try {
-                    debug('Mencoba memuat: ' + targetUrl);
-                    
-                    // Coba proxy
-                    const proxies = [
-                        `https://api.allorigins.win/raw?url=${encodeURIComponent(targetUrl)}`,
-                        `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`,
-                        `https://thingproxy.freeboard.io/fetch/${encodeURIComponent(targetUrl)}`
-                    ];
-                    
-                    let html = null;
-                    let proxyUsed = null;
-                    
-                    for (const proxy of proxies) {
-                        try {
-                            debug('Mencoba proxy: ' + proxy);
-                            const response = await fetch(proxy, { 
-                                timeout: 10000,
-                                headers: {
-                                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-                                }
-                            });
-                            if (response.ok) {
-                                html = await response.text();
-                                proxyUsed = proxy;
-                                debug('Proxy berhasil: ' + proxy);
-                                break;
-                            }
-                        } catch (e) {
-                            debug('Proxy gagal: ' + e.message);
-                            continue;
+                // Blokir semua event navigasi
+                document.addEventListener('click', function(e) {
+                    const target = e.target.closest('a');
+                    if (target && target.target === '_blank') {
+                        const href = target.href;
+                        if (BLOCKED_KEYWORDS.some(keyword => href.includes(keyword))) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            popupCount++;
+                            updateStats();
+                            showPopupAlert();
                         }
                     }
-                    
-                    if (!html) {
-                        debug('Semua proxy gagal, fallback ke direct URL');
-                        // Fallback: langsung akses URL
-                        videoPlayer.src = targetUrl;
-                        loadingEl.style.display = 'none';
-                        videoContainer.style.display = 'block';
-                        return;
-                    }
-                    
-                    // Bersihkan HTML
-                    BLOCKED_DOMAINS.forEach(domain => {
-                        const patterns = [
-                            `<script[^>]*src=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>\\s*<\\/script>`,
-                            `<script[^>]*>[^<]*${domain.replace(/\./g, '\\.')}[^<]*<\\/script>`,
-                            `<iframe[^>]*src=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>\\s*<\\/iframe>`,
-                            `<a[^>]*href=["'][^"']*${domain.replace(/\./g, '\\.')}[^"']*["'][^>]*>.*?<\\/a>`
-                        ];
-                        
-                        patterns.forEach(pattern => {
-                            const regex = new RegExp(pattern, 'gi');
-                            html = html.replace(regex, '');
-                        });
-                    });
-                    
-                    // Suntikkan anti-popup script
-                    const antiPopupScript = `
-                        <script>
-                            (function() {
-                                const noop = function() { return null; };
-                                const blockFunctions = ['open', 'alert', 'confirm', 'prompt', 'print', 'showModalDialog', 'showModelessDialog'];
-                                blockFunctions.forEach(func => { try { window[func] = noop; } catch(e) {} });
-                                
-                                setInterval(function() {
-                                    const iframes = document.querySelectorAll('iframe');
-                                    iframes.forEach(iframe => {
-                                        const style = window.getComputedStyle(iframe);
-                                        if (style.display === 'none' || style.visibility === 'hidden' || iframe.width === '0' || iframe.height === '0') {
-                                            if (!iframe.closest('#video-player')) iframe.remove();
-                                        }
-                                    });
-                                }, 500);
-                            })();
-                        <\/script>
-                    `;
-                    
-                    html = html.replace('<head>', '<head>' + antiPopupScript);
-                    
-                    // Gunakan blob URL
-                    const blob = new Blob([html], { type: 'text/html' });
-                    const blobUrl = URL.createObjectURL(blob);
-                    
-                    videoPlayer.src = blobUrl;
-                    
-                    loadingEl.style.display = 'none';
-                    videoContainer.style.display = 'block';
-                    
-                    videoPlayer.onload = function() {
-                        URL.revokeObjectURL(blobUrl);
-                        debug('Konten berhasil dimuat');
+                }, true);
+                
+                // Blokir beforeunload (popunder)
+                window.addEventListener('beforeunload', function(e) {
+                    popupCount++;
+                    updateStats();
+                    showPopupAlert();
+                    e.preventDefault();
+                    e.returnValue = '';
+                    return '';
+                });
+            }
+            
+            // ===== STRATEGI 3: SUNTIKKAN ANTI-POPUP KE IFRAME =====
+            function injectAntiPopupCode(iframe) {
+                const antiPopupCode = `
+                    // Hancurkan semua fungsi pembuat popup
+                    window.open = window.alert = window.confirm = window.prompt = window.print = function() { 
+                        if (window.parent) window.parent.postMessage('popup-blocked', '*');
+                        return null; 
                     };
                     
-                } catch (error) {
-                    debug('Error fatal: ' + error.message);
-                    showError('Gagal memuat: ' + error.message);
+                    // Blokir pembuatan iframe tersembunyi
+                    const createElement = document.createElement;
+                    document.createElement = function(tag) {
+                        const el = createElement.call(document, tag);
+                        
+                        if (tag.toLowerCase() === 'iframe' || tag.toLowerCase() === 'script') {
+                            return new Proxy(el, {
+                                set: function(obj, prop, value) {
+                                    if (prop === 'src' || prop === 'srcdoc') {
+                                        if (typeof value === 'string') {
+                                            const blocked = ${JSON.stringify(BLOCKED_KEYWORDS)};
+                                            if (blocked.some(k => value.includes(k))) {
+                                                console.log('🧹 Elemen berbahaya diblokir:', value);
+                                                window.parent.postMessage('element-blocked', '*');
+                                                return true;
+                                            }
+                                        }
+                                    }
+                                    obj[prop] = value;
+                                    return true;
+                                }
+                            });
+                        }
+                        return el;
+                    };
                     
-                    // Ultimate fallback
-                    videoPlayer.src = targetUrl;
-                    loadingEl.style.display = 'none';
-                    videoContainer.style.display = 'block';
+                    // Bersihkan setiap 100ms
+                    setInterval(function() {
+                        // Hapus semua iframe tersembunyi
+                        document.querySelectorAll('iframe').forEach(iframe => {
+                            const style = window.getComputedStyle(iframe);
+                            if (style.display === 'none' || style.visibility === 'hidden' || iframe.offsetWidth === 0) {
+                                if (!iframe.src || !iframe.src.includes('bitmovin')) {
+                                    iframe.remove();
+                                    window.parent.postMessage('iframe-removed', '*');
+                                }
+                            }
+                        });
+                        
+                        // Hapus div popup
+                        document.querySelectorAll('div').forEach(div => {
+                            if (div.style.position === 'fixed' || div.style.position === 'absolute') {
+                                if (div.offsetWidth > 100 && div.offsetHeight > 50) {
+                                    if (div.innerHTML.includes('iklan') || div.innerHTML.includes('klik')) {
+                                        div.remove();
+                                    }
+                                }
+                            }
+                        });
+                    }, 100);
+                `;
+                
+                executeInIframe(iframe, antiPopupCode);
+            }
+            
+            // ===== STRATEGI 4: INTERCEPT POST MESSAGE =====
+            window.addEventListener('message', function(event) {
+                if (event.data === 'popup-blocked' || event.data === 'element-blocked' || event.data === 'iframe-removed') {
+                    popupCount++;
+                    updateStats();
+                    showPopupAlert();
+                }
+            });
+            
+            // ===== UTILITY FUNCTIONS =====
+            function showPopupAlert() {
+                const alert = document.getElementById('popup-alert');
+                alert.style.display = 'block';
+                setTimeout(() => {
+                    alert.style.display = 'none';
+                }, 500);
+            }
+            
+            function updateStats() {
+                const stats = document.getElementById('blocker-stats');
+                stats.style.display = 'block';
+                stats.innerHTML = `🛡️ Blocker Aktif: ${popupCount} popup diblokir`;
+            }
+            
+            // ===== STRATEGI 5: CONTENT SECURITY POLICY =====
+            function setupCSP() {
+                const meta = document.createElement('meta');
+                meta.httpEquiv = 'Content-Security-Policy';
+                meta.content = "default-src 'self' * data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' *; frame-src *; popup-src 'none';";
+                document.head.appendChild(meta);
+            }
+            
+            // ===== STRATEGI 6: PERIODIC CLEANUP =====
+            function startPeriodicCleanup() {
+                setInterval(() => {
+                    // Cek apakah ada window baru terbuka
+                    if (window.top && window.top.document !== document) {
+                        // Kita berada di popup, coba tutup
+                        try {
+                            window.close();
+                            popupCount++;
+                            updateStats();
+                        } catch(e) {}
+                    }
+                    
+                    // Cek elemen mencurigakan di halaman utama
+                    const suspiciousElements = document.querySelectorAll('[onclick*="open"], [onclick*="popup"], [target="_blank"]');
+                    suspiciousElements.forEach(el => {
+                        if (el.href && BLOCKED_KEYWORDS.some(k => el.href.includes(k))) {
+                            el.removeAttribute('target');
+                            el.removeAttribute('onclick');
+                        }
+                    });
+                    
+                }, 200);
+            }
+            
+            // ===== STRATEGI 7: EVENT CAPTURE =====
+            function setupEventCapture() {
+                document.addEventListener('mouseup', function(e) {
+                    if (e.button === 1) { // Middle click
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showPopupAlert();
+                    }
+                }, true);
+                
+                document.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                }, true);
+            }
+            
+            // ===== INITIALIZATION =====
+            async function init() {
+                console.log('🛡️ Mengaktifkan Zero-Popup Protection');
+                
+                // Setup semua proteksi
+                setupCSP();
+                setupGlobalTraps();
+                setupEventCapture();
+                startPeriodicCleanup();
+                
+                // Muat konten ke iframe
+                const playerLayer = document.getElementById('player-layer');
+                
+                // Coba muat dengan berbagai metode
+                try {
+                    // Method 1: Langsung
+                    playerLayer.src = targetUrl;
+                    
+                    // Tunggu iframe load
+                    playerLayer.onload = function() {
+                        if (!isInitialized) {
+                            isInitialized = true;
+                            
+                            // Suntikkan anti-popup ke dalam iframe
+                            setTimeout(() => {
+                                injectAntiPopupCode(playerLayer);
+                            }, 1000);
+                            
+                            // Suntikkan lagi setiap 3 detik
+                            setInterval(() => {
+                                if (playerLayer.contentDocument) {
+                                    injectAntiPopupCode(playerLayer);
+                                }
+                            }, 3000);
+                            
+                            // Sembunyikan loading
+                            document.getElementById('loading').style.display = 'none';
+                        }
+                    };
+                    
+                } catch(e) {
+                    console.error('Gagal memuat:', e);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error-message').style.display = 'block';
+                    document.getElementById('error-message').innerHTML = '❌ Gagal memuat: ' + e.message;
                 }
             }
             
-            // Mulai loading
-            loadContent();
+            // Mulai
+            init();
             
         })();
     </script>
