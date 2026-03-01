@@ -1,0 +1,298 @@
+<html lang="id">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="referrer" content="same-origin">
+    <title>LSBTV - BEBAS IKLAN - STREAMING BERSIH</title>
+
+    <!-- === ANTI IKLAN & ANTI POPUP SUPER AGRESIF === -->
+    <script>
+    (function aggressiveAdBlocker() {
+        'use strict';
+        
+        // ========== 1. BLOKIR POPUP ==========
+        const originalOpen = window.open;
+        window.open = function() { return null; };
+        
+        try {
+            Object.defineProperty(window, 'open', {
+                value: function() { return null; },
+                writable: false,
+                configurable: false
+            });
+        } catch(e) {}
+        
+        // Blur/focus bypass
+        window.blur = function() {};
+        window.focus = function() {};
+
+        // ========== 2. BLOKIR IKLAN UMUM ==========
+        function blockAds() {
+            // Daftar kata kunci iklan (class/id/url)
+            const adKeywords = [
+                'ad', 'ads', 'advert', 'advertisement', 'banner', 'popup', 
+                'pop-up', 'sponsor', 'promo', 'overlay', 'floating', 
+                'sticky', 'modal', 'interstitial', 'dable', 'taboola',
+                'outbrain', 'doubleclick', 'googlead', 'googlesyndication',
+                'amazon-adsystem', 'adnxs', 'rubicon', 'criteo', 'propeller',
+                'popunder', 'exoclick', 'trafficjunky', 'adf.ly', 'shorte.st'
+            ];
+            
+            // Sembunyikan elemen yang mencurigakan
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(el => {
+                if (el.tagName === 'SCRIPT' || el.tagName === 'IFRAME') return;
+                
+                const classId = (el.className + ' ' + (el.id || '')).toLowerCase();
+                const isAd = adKeywords.some(keyword => classId.includes(keyword));
+                
+                if (isAd) {
+                    el.style.display = 'none';
+                    el.style.visibility = 'hidden';
+                    el.style.opacity = '0';
+                    el.style.pointerEvents = 'none';
+                    if (el.parentNode) el.parentNode.removeChild(el);
+                }
+            });
+        }
+
+        // ========== 3. BLOKIR REQUEST IKLAN ==========
+        // Override fetch & XHR
+        const originalFetch = window.fetch;
+        window.fetch = function(url, options) {
+            const urlStr = url.toString().toLowerCase();
+            const adKeywords = ['ad', 'ads', 'pop', 'track', 'analytics', 'doubleclick', 'googlead'];
+            
+            if (adKeywords.some(keyword => urlStr.includes(keyword))) {
+                return new Promise((resolve) => {
+                    resolve(new Response('', { status: 200, statusText: 'Blocked by AdBlocker' }));
+                });
+            }
+            return originalFetch.call(this, url, options);
+        };
+
+        // Block XMLHttpRequest
+        const XHR = XMLHttpRequest;
+        window.XMLHttpRequest = function() {
+            const xhr = new XHR();
+            const originalOpen = xhr.open;
+            xhr.open = function(method, url) {
+                const urlStr = url.toString().toLowerCase();
+                const adKeywords = ['ad', 'ads', 'pop', 'track', 'analytics', 'doubleclick'];
+                
+                if (adKeywords.some(keyword => urlStr.includes(keyword))) {
+                    return; // Block request
+                }
+                return originalOpen.apply(this, arguments);
+            };
+            return xhr;
+        };
+
+        // ========== 4. BLOKIR IFRAME IKLAN ==========
+        // Monitor dan blokir iframe baru
+        if (window.MutationObserver) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.nodeType === 1) { // Element node
+                            // Cek iframe
+                            if (node.tagName === 'IFRAME') {
+                                const src = (node.src || '').toLowerCase();
+                                const adKeywords = ['ad', 'ads', 'doubleclick', 'pop', 'sponsor'];
+                                
+                                if (adKeywords.some(keyword => src.includes(keyword))) {
+                                    node.remove();
+                                    return;
+                                }
+                            }
+                            
+                            // Hapus event listener mencurigakan
+                            node.onclick = null;
+                            node.onmousedown = null;
+                            node.onmouseup = null;
+                            
+                            // Cek class/id
+                            const classId = (node.className + ' ' + (node.id || '')).toLowerCase();
+                            const adKeywords = ['ad', 'ads', 'banner', 'popup', 'overlay'];
+                            
+                            if (adKeywords.some(keyword => classId.includes(keyword))) {
+                                node.style.display = 'none';
+                                node.remove();
+                            }
+                        }
+                    });
+                });
+            });
+            
+            observer.observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        // ========== 5. BLOKIR DOMAIN IKLAN ==========
+        // Blokir elemen dengan src dari domain iklan
+        const adDomains = [
+            'doubleclick.net', 'googleadservices.com', 'googlesyndication.com',
+            'adsystem.com', 'adnxs.com', 'rubiconproject.com', 'criteo.com',
+            'taboola.com', 'outbrain.com', 'sharethrough.com', 'revcontent.com',
+            'popads.net', 'propellerads.com', 'exoclick.com', 'trafficjunky.com',
+            'adf.ly', 'shorte.st', 'bc.vc', 'bit.ly', 'tinyurl.com'
+        ];
+        
+        function checkAndBlockAdDomains() {
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                const src = iframe.src || '';
+                if (adDomains.some(domain => src.includes(domain))) {
+                    iframe.remove();
+                }
+            });
+            
+            const scripts = document.querySelectorAll('script[src]');
+            scripts.forEach(script => {
+                const src = script.src;
+                if (adDomains.some(domain => src.includes(domain))) {
+                    script.remove();
+                }
+            });
+        }
+
+        // ========== 6. EKSEKUSI BERKALA ==========
+        setInterval(() => {
+            blockAds();
+            checkAndBlocAdDomains();
+            
+            // Re-apply window.open blocker
+            if (window.open !== originalOpen) {
+                window.open = function() { return null; };
+            }
+        }, 1000);
+
+        // Jalankan segera
+        setTimeout(() => {
+            blockAds();
+            checkAndBlockAdDomains();
+        }, 100);
+
+        // ========== 7. CLEANUP CSS ==========
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Sembunyikan elemen iklan umum */
+            [class*="ad-"], [class*="ads"], [class*="advert"], 
+            [id*="ad-"], [id*="ads"], [id*="advert"],
+            [class*="banner"], [id*="banner"],
+            [class*="popup"], [id*="popup"],
+            [class*="overlay"], [id*="overlay"],
+            [class*="modal"], [id*="modal"],
+            iframe[src*="doubleclick"], iframe[src*="googlead"],
+            iframe[src*="popads"], iframe[src*="exoclick"] {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                width: 0 !important;
+                height: 0 !important;
+                overflow: hidden !important;
+                position: absolute !important;
+                top: -9999px !important;
+                left: -9999px !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('Agresif AdBlocker AKTIF - Iklan akan diblokir!');
+    })();
+    </script>
+    <!-- === ANTI IKLAN SELESAI === -->
+
+    <!-- CSS dan JS lainnya tetap sama -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Arjunaaaaa/lsbtv/gaya.css" />
+    <script src='https://cdn.jsdelivr.net/gh/Arjunaaaaa/lsbtv/fullscreen.js' crossorigin='anonymous'></script>
+    <script src='https://cdn.jsdelivr.net/gh/Arjunaaaaa/lsbtv/aspekrasio.js' crossorigin='anonymous'></script>
+    
+    <style>
+        /* Style Anda tetap sama */
+        .konten-atas { position: absolute; top: 0; left: 0; }
+        .konten-bawah { position: relative; }
+        .vidio { margin-top: -8px; }
+        #offline-message { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: #f1f1f1; padding: 20px; border-radius: 5px; text-align: center; }
+        .container { position: relative; }
+        .overlay { position: relative; top: 0; display: flex; justify-content: center; align-items: center; }
+        .iframe { border: 1px solid #000; border-radius: 10px; }
+    </style>
+
+    <script>
+        // Script load iframe Anda (sama seperti sebelumnya)
+        window.addEventListener('load', function() {
+            var online = navigator.onLine;
+            function updateStatus() {
+                var offlineMessage = document.getElementById('offline-message');
+                offlineMessage.style.display = online ? 'none' : 'block';
+            }
+            updateStatus();
+            
+            window.addEventListener('online', function() { online = true; updateStatus(); });
+            window.addEventListener('offline', function() { online = false; updateStatus(); });
+            
+            var embedFile = 'embed.html';
+            var urlParams = new URLSearchParams(window.location.search);
+            var embedUrl = urlParams.get('link');
+            var iframe = document.getElementById('vidio');
+            
+            if (embedUrl) {
+                iframe.src = embedFile + '?url=' + encodeURIComponent(embedUrl);
+            } else {
+                iframe.src = embedFile + '?url=';
+                offlineMessage.style.display = 'block';
+                offlineMessage.innerHTML = '<h2>Error</h2><p>Tidak ada URL embed yang diberikan.</p>';
+            }
+        });
+    </script>
+</head>
+<body bgcolor='black' style='margin:0' oncontextmenu='return false' onkeydown='return false' onmousedown='return false'>
+    <div class="konten-bawah">
+        <iframe class="vidio" id="vidio" width="100%" height="100%" margin
+                title="Lsbt"
+                sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen></iframe>
+    </div>
+    <div class="konten-atas">
+        <marquee bgcolor="black" style="color: black; font-family: arial; font-size: 40px;"> </marquee>
+    </div>
+    <div id="offline-message">
+        <h2></h2>
+        <p></p>
+    </div>
+    <script>
+        var iframe = document.getElementById('vidio');
+        var offlineMessage = document.getElementById('offline-message');
+        
+        iframe.addEventListener('load', function() {
+            var online = navigator.onLine;
+            if (!online) {
+                offlineMessage.style.display = 'block';
+                iframe.style.display = 'none';
+            }
+            
+            // Coba inject script anti-iklan ke dalam iframe (jika same-origin)
+            try {
+                if (iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'ADBLOCKER_ACTIVATE',
+                        payload: 'aggressive'
+                    }, '*');
+                }
+            } catch(e) {}
+        });
+        
+        var online = navigator.onLine;
+        if (!online) {
+            offlineMessage.style.display = 'block';
+            iframe.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
