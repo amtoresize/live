@@ -3,329 +3,240 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <meta name="referrer" content="same-origin">
-    <title>LSBTV - ZERO ADS - TRUE ADBLOCK</title>
+    <title>LSBTV - BEBAS IKLAN</title>
 
-    <!-- === ANTI IKLAN VERSI NUKLIR (HALAH SEMUA) === -->
+    <!-- === ANTI IKLAN SUPER LENGKAP === -->
     <script>
-    (function nuclearAdBlocker() {
+    (function ultimateAdBlocker() {
         'use strict';
         
-        // ========== 1. HANCURKAN SEMUA FUNGSI YANG BISA BUAT POPUP ==========
-        // Override total semua fungsi mencurigakan
-        const killFunctions = [
-            'open', 'showModalDialog', 'showModelessDialog', 'print',
-            'createPopup', 'openDialog', 'showPopup'
+        // ========== 1. DAFTAR HITAM SCRIPT IKLAN ==========
+        const blockedScripts = [
+            // Script iklan dari player Anda
+            'pisionx.pages.dev/dazn.js',
+            'pl25835327.effectivegatecpm.com',
+            'effectivegatecpm.com',
+            
+            // Domain iklan umum
+            'doubleclick.net',
+            'googleadservices.com',
+            'googlesyndication.com',
+            'popads.net',
+            'propellerads.com', 
+            'exoclick.com',
+            'adf.ly',
+            'shorte.st',
+            'bc.vc'
         ];
+
+        // ========== 2. HACK: TANGKAP SEMUA PEMBUATAN SCRIPT ==========
+        // Simpan fungsi asli
+        const originalCreateElement = document.createElement;
         
-        killFunctions.forEach(func => {
-            try {
-                window[func] = function() { return null; };
-                Object.defineProperty(window, func, {
-                    value: function() { return null; },
-                    writable: false,
-                    configurable: false
+        // Override createElement
+        document.createElement = function(tagName) {
+            const element = originalCreateElement.call(document, tagName);
+            
+            // Khusus untuk tag script, kita awasi
+            if (tagName.toLowerCase() === 'script') {
+                // Simpan properti src asli
+                let src = '';
+                
+                // Override setter untuk src
+                Object.defineProperty(element, 'src', {
+                    get: function() { return src; },
+                    set: function(value) {
+                        // Cek apakah src termasuk daftar hitam
+                        const isBlocked = blockedScripts.some(domain => 
+                            value.includes(domain)
+                        );
+                        
+                        if (isBlocked) {
+                            console.log('[ADBLOCK] Mencegat script iklan:', value);
+                            // Jangan set src, biarkan kosong
+                            src = '';
+                            // Opsional: lempar error atau diam saja
+                        } else {
+                            src = value;
+                        }
+                    },
+                    configurable: true
                 });
-            } catch(e) {}
-        });
-
-        // ========== 2. BLOKIR SEMUA EVENT YANG BISA PICU IKLAN ==========
-        const blockEvents = [
-            'click', 'mousedown', 'mouseup', 'auxclick', 'contextmenu',
-            'dblclick', 'mouseover', 'mouseenter', 'touchstart', 'touchend',
-            'touchmove', 'touchcancel', 'pointerdown', 'pointerup'
-        ];
-
-        // Fungsi untuk strip semua event listener
-        function stripAllEvents(el) {
-            if (!el || el.nodeType !== 1) return;
-            
-            blockEvents.forEach(eventType => {
-                el['on' + eventType] = null;
-            });
-            
-            // Hapus atribut event langsung
-            const attributes = el.attributes;
-            if (attributes) {
-                for (let i = attributes.length - 1; i >= 0; i--) {
-                    const attr = attributes[i].name;
-                    if (attr.startsWith('on') || attr.includes('click') || attr.includes('mouse')) {
-                        el.removeAttribute(attr);
-                    }
-                }
             }
+            
+            return element;
+        };
+
+        // ========== 3. TANGKAP SCRIPT YANG SUDAH ADA ==========
+        // Hapus script iklan yang sudah terlanjur dimuat
+        function removeExistingAdScripts() {
+            const scripts = document.querySelectorAll('script');
+            scripts.forEach(script => {
+                const src = script.src || '';
+                
+                // Cek apakah script ini dari domain iklan
+                const isAdScript = blockedScripts.some(domain => 
+                    src.includes(domain)
+                );
+                
+                // Cek juga script inline yang mencurigakan
+                const isInlineAd = script.textContent && (
+                    script.textContent.includes('atob(') ||
+                    script.textContent.includes('eval(') ||
+                    script.textContent.includes('window.open') ||
+                    script.textContent.includes('popunder') ||
+                    script.textContent.includes('document.location')
+                );
+                
+                if (isAdScript || isInlineAd) {
+                    console.log('[ADBLOCK] Menghapus script iklan:', src || 'inline');
+                    script.remove();
+                }
+            });
         }
 
-        // ========== 3. BLOKIR SEMUA IFRAME YANG MENCURIGAKAN ==========
-        function killAllIframes() {
+        // ========== 4. BLOKIR IFRAME IKLAN ==========
+        function removeAdIframes() {
             const iframes = document.querySelectorAll('iframe');
             iframes.forEach(iframe => {
-                // Hanya izinkan iframe utama (video player)
-                const isMainPlayer = iframe.id === 'vidio' || 
-                                    iframe.classList.contains('vidio') ||
-                                    iframe.src.includes('youtube') ||
-                                    iframe.src.includes('vimeo') ||
-                                    iframe.src.includes('dailymotion');
+                const src = iframe.src || '';
                 
-                if (!isMainPlayer) {
-                    console.log('[NUKLIR] Iframe iklan dihancurkan:', iframe.src);
+                // Hanya izinkan iframe player utama
+                if (iframe.id === 'vidio' || iframe.classList.contains('vidio')) {
+                    return;
+                }
+                
+                // Cek apakah iframe dari domain iklan
+                const isAdIframe = blockedScripts.some(domain => 
+                    src.includes(domain)
+                );
+                
+                // Cek juga iframe dengan ukuran mencurigakan
+                const width = iframe.offsetWidth;
+                const height = iframe.offsetHeight;
+                const adSizes = [
+                    [300, 250], [336, 280], [728, 90], 
+                    [468, 60], [120, 600], [160, 600]
+                ];
+                
+                const isAdSize = adSizes.some(([w, h]) => 
+                    Math.abs(width - w) < 10 && Math.abs(height - h) < 10
+                );
+                
+                if (isAdIframe || isAdSize) {
+                    console.log('[ADBLOCK] Menghapus iframe iklan:', src);
                     iframe.remove();
                 }
             });
         }
 
-        // ========== 4. BLOKIR DOMAIN IKLAN LENGKAP ==========
-        const adNetworks = [
-            // Google/DoubleClick
-            'doubleclick.net', 'googleadservices.com', 'googlesyndication.com',
-            'google-analytics.com', 'googletagmanager.com', 'googleads.g.doubleclick.net',
-            'pagead2.googlesyndication.com', 'tpc.googlesyndication.com',
-            
-            // Popunder networks
-            'popads.net', 'popcash.net', 'popunder.net', 'popup', 'popunder',
-            'propellerads.com', 'propellerclick.com', 'trafficfactory.biz',
-            'exoclick.com', 'exoclick.net', 'exoclickdrive.com',
-            'trafficjunky.net', 'trafficjunky.com', 'juicyads.com',
-            'adf.ly', 'shorte.st', 'bc.vc', 'linkbucks.com', 'cash4links.com',
-            
-            // Ad networks umum
-            'cpmstar.com', 'adnxs.com', 'rubiconproject.com', 'criteo.com',
-            'taboola.com', 'outbrain.com', 'revcontent.com', 'mgid.com',
-            'zemanta.com', 'disqusads.com', 'sharethrough.com',
-            
-            // Native ads
-            'dable.io', 'nativeads.com', 'adroll.com', 'tremorhub.com',
-            'spotxchange.com', 'adsrvr.org', 'contextweb.com',
-            
-            // Malicious/redirect
-            'redirect', 'clk.sh', 'clicks', 'adclick', 'clickthrough',
-            'go.php', 'link.php', 'out.php', 'track.php'
-        ];
-
-        // ========== 5. FILTER SEMUA ELEMEN ==========
-        function filterAllElements() {
-            const allElements = document.querySelectorAll('*');
-            
-            allElements.forEach(el => {
-                if (!el || el.nodeType !== 1) return;
-                
-                const tagName = el.tagName.toLowerCase();
-                const className = (el.className || '').toString().toLowerCase();
-                const id = (el.id || '').toString().toLowerCase();
-                const src = (el.src || '').toString().toLowerCase();
-                const href = (el.href || '').toString().toLowerCase();
-                
-                // 1. Hancurkan script eksternal mencurigakan
-                if (tagName === 'script' && src) {
-                    const isAdScript = adNetworks.some(domain => src.includes(domain));
-                    if (isAdScript) {
-                        el.remove();
-                        return;
-                    }
-                }
-                
-                // 2. Hancurkan iframe iklan
-                if (tagName === 'iframe' && el.id !== 'vidio') {
-                    const isAdIframe = adNetworks.some(domain => src.includes(domain)) ||
-                                      className.includes('ad') ||
-                                      id.includes('ad') ||
-                                      src.includes('ad') ||
-                                      src === ''; // Iframe kosong biasanya untuk iklan
-                    
-                    if (isAdIframe) {
-                        el.remove();
-                        return;
-                    }
-                }
-                
-                // 3. Hancurkan elemen dengan class/id mencurigakan
-                const suspiciousPatterns = [
-                    'ad', 'ads', 'advert', 'banner', 'popup', 'popunder',
-                    'overlay', 'modal', 'sponsor', 'promo', 'floating',
-                    'sticky', 'sidebar', 'widget', 'social', 'share',
-                    'recommend', 'related', 'trending', 'popular'
-                ];
-                
-                const isSuspicious = suspiciousPatterns.some(pattern => 
-                    className.includes(pattern) || id.includes(pattern)
-                );
-                
-                if (isSuspicious) {
-                    el.remove();
-                    return;
-                }
-                
-                // 4. Hancurkan elemen dengan ukuran mencurigakan
-                const style = window.getComputedStyle(el);
-                const width = parseInt(style.width);
-                const height = parseInt(style.height);
-                
-                // Ukuran banner iklan umum
-                const adSizes = [
-                    [300, 250], [336, 280], [728, 90], [468, 60],
-                    [234, 60], [120, 600], [160, 600], [300, 600],
-                    [970, 90], [970, 250], [320, 50], [320, 100]
-                ];
-                
-                if (!isNaN(width) && !isNaN(height)) {
-                    const isAdSize = adSizes.some(([w, h]) => 
-                        Math.abs(width - w) < 5 && Math.abs(height - h) < 5
-                    );
-                    
-                    if (isAdSize) {
-                        el.remove();
-                        return;
-                    }
-                }
-                
-                // 5. Hapus semua event listener
-                stripAllEvents(el);
-            });
-        }
-
-        // ========== 6. BLOKIR FETCH/XHR ==========
-        // Blokir semua request ke domain iklan
-        const originalFetch = window.fetch;
-        window.fetch = function(input, init) {
-            const url = typeof input === 'string' ? input : input.url;
-            if (adNetworks.some(domain => url.includes(domain))) {
-                console.log('[NUKLIR] Fetch diblokir:', url);
-                return new Promise(resolve => resolve(new Response()));
-            }
-            return originalFetch.call(this, input, init);
-        };
-
-        // Blokir XMLHttpRequest
-        const XHR = XMLHttpRequest;
-        window.XMLHttpRequest = function() {
-            const xhr = new XHR();
-            const originalOpen = xhr.open;
-            xhr.open = function(method, url) {
-                if (adNetworks.some(domain => url.includes(domain))) {
-                    console.log('[NUKLIR] XHR diblokir:', url);
-                    return;
-                }
-                return originalOpen.apply(this, arguments);
-            };
-            return xhr;
-        };
-
-        // ========== 7. MONITOR DAN HANCURKAN ELEMEN BARU ==========
-        const observer = new MutationObserver((mutations) => {
-            mutations.forEach(mutation => {
-                if (mutation.addedNodes.length > 0) {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.nodeType === 1) {
-                            // Hancurkan langsung
-                            setTimeout(() => {
-                                try {
-                                    filterAllElements();
-                                    killAllIframes();
-                                } catch(e) {}
-                            }, 0);
-                        }
-                    });
-                }
-            });
-        });
-
-        // Mulai observasi
-        observer.observe(document.documentElement, {
-            childList: true,
-            subtree: true,
-            attributes: true,
-            attributeFilter: ['src', 'style', 'class', 'id']
-        });
-
-        // ========== 8. CSS NUKLIR ==========
-        const nuclearCSS = document.createElement('style');
-        nuclearCSS.textContent = `
-            /* Hancurkan semua elemen mencurigakan */
-            [class*="ad"]:not([class*="grade"]):not([class*="lead"]):not([class*="read"]),
-            [id*="ad"]:not([id*="grade"]):not([id*="lead"]):not([id*="read"]),
-            [class*="banner"], [id*="banner"],
-            [class*="popup"], [id*="popup"],
-            [class*="overlay"], [id*="overlay"],
-            [class*="modal"], [id*="modal"],
-            [class*="sponsor"], [id*="sponsor"],
-            [class*="promo"], [id*="promo"],
-            [class*="floating"], [id*="floating"],
-            [class*="sticky"], [id*="sticky"],
-            [class*="sidebar"], [id*="sidebar"],
-            [class*="widget"], [id*="widget"],
-            [class*="social"], [id*="social"],
-            [class*="share"], [id*="share"],
+        // ========== 5. CSS NUKLIR UNTUK SEMBUNYIKAN IFRAME IKLAN ==========
+        const style = document.createElement('style');
+        style.textContent = `
+            /* Sembunyikan semua elemen mencurigakan */
             iframe[src*="doubleclick"],
             iframe[src*="googlead"],
             iframe[src*="popads"],
             iframe[src*="exoclick"],
             iframe[src*="propeller"],
-            div[style*="position: fixed"][style*="bottom"],
-            div[style*="position: fixed"][style*="top"],
+            iframe[src*="effectivegatecpm"],
+            iframe[src*="pisionx"],
+            
+            /* Sembunyikan elemen dengan class/id iklan */
+            [class*="ad-"], [id*="ad-"],
+            [class*="ads"], [id*="ads"],
+            [class*="banner"], [id*="banner"],
+            [class*="popup"], [id*="popup"],
+            
+            /* Sembunyikan elemen yang floating/mengganggu */
+            div[style*="position: fixed"],
             div[style*="position: absolute"][style*="z-index"],
-            div[style*="z-index: 999"],
-            div[style*="z-index: 9999"],
-            div[style*="z-index: 99999"] {
+            div[style*="z-index: 999"] {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
                 pointer-events: none !important;
-                width: 0 !important;
-                height: 0 !important;
-                overflow: hidden !important;
-                position: absolute !important;
-                top: -99999px !important;
-                left: -99999px !important;
-                z-index: -99999 !important;
             }
             
             /* Pastikan video player tetap kelihatan */
-            #vidio, .vidio, iframe[src*="youtube"], iframe[src*="vimeo"], 
-            iframe[src*="dailymotion"], video, audio {
+            #vidio, .vidio, iframe[id="vidio"] {
                 display: block !important;
                 visibility: visible !important;
                 opacity: 1 !important;
                 pointer-events: auto !important;
-                position: relative !important;
-                top: auto !important;
-                left: auto !important;
-                z-index: 1 !important;
-            }
-            
-            /* Blokir semua elemen yang menggunakan z-index tinggi */
-            *[style*="z-index: 999"]:not(#vidio):not(.vidio),
-            *[style*="z-index: 9999"]:not(#vidio):not(.vidio),
-            *[style*="z-index: 99999"]:not(#vidio):not(.vidio) {
-                display: none !important;
             }
         `;
-        document.head.appendChild(nuclearCSS);
+        document.head.appendChild(style);
 
-        // ========== 9. EKSEKUSI BERKALA SUPER CEPAT ==========
-        // Scan setiap 100ms untuk hancurkan iklan yang muncul
+        // ========== 6. PANTAU PERUBAHAN DOM ==========
+        if (window.MutationObserver) {
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    // Tangkap script baru
+                    if (mutation.addedNodes) {
+                        mutation.addedNodes.forEach((node) => {
+                            if (node.nodeType === 1) { // Element node
+                                // Jika node adalah script
+                                if (node.tagName === 'SCRIPT') {
+                                    const src = node.src || '';
+                                    const isAdScript = blockedScripts.some(domain => 
+                                        src.includes(domain)
+                                    );
+                                    
+                                    if (isAdScript) {
+                                        console.log('[ADBLOCK] Script baru diblokir:', src);
+                                        node.remove();
+                                    }
+                                }
+                                
+                                // Jika node mengandung iframe
+                                if (node.tagName === 'IFRAME') {
+                                    const src = node.src || '';
+                                    const isAdIframe = blockedScripts.some(domain => 
+                                        src.includes(domain)
+                                    );
+                                    
+                                    if (isAdIframe && node.id !== 'vidio') {
+                                        console.log('[ADBLOCK] Iframe baru diblokir:', src);
+                                        node.remove();
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Mulai observasi
+            observer.observe(document.documentElement, {
+                childList: true,
+                subtree: true
+            });
+        }
+
+        // ========== 7. EKSEKUSI BERKALA ==========
         setInterval(() => {
-            try {
-                filterAllElements();
-                killAllIframes();
-            } catch(e) {}
-        }, 100);
+            removeExistingAdScripts();
+            removeAdIframes();
+        }, 500); // Cek setiap 500ms
 
         // Jalankan pertama kali
         setTimeout(() => {
-            filterAllElements();
-            killAllIframes();
-        }, 10);
+            removeExistingAdScripts();
+            removeAdIframes();
+        }, 100);
 
-        console.log('%c🔥 NUKLIR ADBLOCKER AKTIF - SELAMAT TINGGAL IKLAN! 🔥', 
-                    'background: red; color: white; font-size: 20px; font-weight: bold;');
+        console.log('%c🚫 ADBLOCK AKTIF - Iklan akan diblokir!', 
+                    'background: red; color: white; font-size: 16px;');
     })();
     </script>
-    <!-- === ANTI IKLAN VERSI NUKLIR SELESAI === -->
+    <!-- === ANTI IKLAN SELESAI === -->
 
-    <!-- CSS dan JS lainnya (sama seperti sebelumnya) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Arjunaaaaa/lsbtv/gaya.css" />
     <script src='https://cdn.jsdelivr.net/gh/Arjunaaaaa/lsbtv/fullscreen.js' crossorigin='anonymous'></script>
     <script src='https://cdn.jsdelivr.net/gh/Arjunaaaaa/lsbtv/aspekrasio.js' crossorigin='anonymous'></script>
-    
+    <script src='https://cdn.jsdelivr.net/gh/Arjunaaaaa/lsbtv/popupwindow.js' crossorigin='anonymous'></script>
+
     <style>
         .konten-atas { position: absolute; top: 0; left: 0; }
         .konten-bawah { position: relative; }
@@ -344,7 +255,6 @@
                 offlineMessage.style.display = online ? 'none' : 'block';
             }
             updateStatus();
-            
             window.addEventListener('online', function() { online = true; updateStatus(); });
             window.addEventListener('offline', function() { online = false; updateStatus(); });
             
@@ -382,7 +292,6 @@
     <script>
         var iframe = document.getElementById('vidio');
         var offlineMessage = document.getElementById('offline-message');
-        
         iframe.addEventListener('load', function() {
             var online = navigator.onLine;
             if (!online) {
@@ -390,7 +299,6 @@
                 iframe.style.display = 'none';
             }
         });
-        
         var online = navigator.onLine;
         if (!online) {
             offlineMessage.style.display = 'block';
